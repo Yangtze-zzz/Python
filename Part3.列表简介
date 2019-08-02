@@ -1,11 +1,10 @@
 列表用[ ]表示，用逗号分隔其中元素
-
 第一个列表元素索引从0开始而不是1开始
 
 bicycles = ['trek', 'cannondale', 'redline', 'specialized']
-
 print(bicycles[0])    #trek
 print(bicycles[-1])   #specialized
+
 
 3-1 姓名：将一些朋友的姓名存储在一个列表中，并将其命名为names。依次访问该列表中的每个元素，从而将每个朋友的姓名都打印出来
 
@@ -126,3 +125,80 @@ del names[0]
 print(names)
 
 
+
+px = ['22c', 'Acs', '33bby', 'awb', 'pk', 'cyz', 'zzz']
+px.sort()               #影响原数组  排序顺序：数字，大写，小写
+print(px)               #['22c', '33bby', 'Acs', 'awb', 'cyz', 'pk', 'zzz']
+#按顺序相反的顺序排列
+px.sort(reverse=True)   #['zzz', 'pk', 'cyz', 'awb', 'Acs', '33bby', '22c']
+
+
+px = ['22c', 'Acs', '33bby', 'awb', 'pk', 'cyz', 'zzz']
+t_px =sorted(px)        #临时排序，不影响原列表
+print(t_px)             #['22c', '33bby', 'Acs', 'awb', 'cyz', 'pk', 'zzz']
+
+
+px = ['22c', 'Acs', '33bby', 'awb', 'pk', 'cyz', 'zzz']
+px.reverse()            #反转列表
+print(px)               #['zzz', 'cyz', 'pk', 'awb', '33bby', 'Acs', '22c']
+
+
+px = ['22c', 'Acs', '33bby', 'awb', 'pk', 'cyz', 'zzz']
+len(px)                 #计算列表长度
+print(len(px) )         #7
+
+
+3-8 放眼世界：想出至少5个你渴望去旅游的地方
+    ·将这些地方存储在一个列表中，并确保其中的元素不是不是按字母顺序排列的
+    ·按原始排列顺序打印该列表。不要考虑输出是否整洁的问题，只管打印原始Python列表
+    ·使用sorted()按字母顺序打印这个列表，同时不要修改它。
+    ·再次打印该列表，核实排列顺序未变
+    ·使用sorted()按与字母顺序相反的顺序打印这个列表，同时不要修改它
+    ·再次打印该列表，核实排列顺序未变
+    ·使用reverse()修改列表元素的排列顺序。打印该列表，核实排列顺序确实变了
+    ·使用reverse()再次修改列表元素的排列顺序。打印该列表，核实已恢复到原来的排列顺序
+    ·使用sort()修改该列表，使其元素按与字母顺序相反的顺序排列。打印该列表，核实排列顺序确实变了
+    
+tourisms = ['America', 'Japan', 'Britain', 'Europe', 'Korea']
+print(tourisms)
+
+print(sorted(tourisms))
+print(tourisms)
+
+print(sorted(tourisms,reverse=True))
+print(tourisms)
+
+tourisms.reverse()
+print(tourisms)
+
+tourisms.reverse()
+print(tourisms)
+
+tourisms.sort()
+print(tourisms)
+
+
+3-9 晚餐嘉宾：在完成练习3-4~练习3-7时编写的程序之一中，使用len()打印一条消息，指出你邀请了多少位嘉宾来与你共进晚餐
+
+len(names)
+
+
+3-10 尝试使用各个函数：想想可存储到列表中的东西，如山岳、河流、国家、城市、语言，或你喜欢的任何东西。编写一个程序，在其中创建一个包含这些元素
+     的列表，然后，对于本章介绍的每个函数，都至少使用一次来处理这个列表
+     
+languages = ['Chinese', 'English', 'Thai', 'Japanese', 'Russian']
+print(sorted(languages))
+print(sorted(languages,reverse=True))
+languages[0] = 'French'
+languages.append('Italian')
+languages.pop()
+languages.insert(3, 'Spanish')
+languages.remove('Thai')
+del languages[2]
+languages.reverse()
+print(languages)
+languages.sort()
+print(languages)
+languages.sort(reverse=True)
+print(languages)
+print(len(languages))
