@@ -1,0 +1,122 @@
+函数input()
+让程序暂停运行，等待用户输入一些文本。获取用户输入后，Python将其存储在一个变量中，以方便你使用
+
+message = input("Tell me something, and I will repeat it back to you:")
+print(message)
+
+Python在运行第一行代码时，用户将看到提示Tell me something, and I will repeat it back to you:
+程序等待用户输入，并在用户按回车键后继续运行
+
+#使用int()来获取数值输入
+age = input("How old are you? ")
+age = int(age)
+print(age >= 18)           #True
+
+
+#求模运算符
+可用其判断奇偶数
+4%3                        #1
+5%3                        #2
+6%3                        #0
+7%3                        #1
+
+
+7-1 汽车租赁：编写一个程序，询问用户要租赁什么样的汽车，并打印一条消息，如"Let me see if I can find you a Subaru"
+
+message = "What kind of car do you need to rent?"
+message +="\nLet me see if I can find you a Subaru"
+print(message)
+
+7-2 餐厅订位：编写一个程序，询问用户有多少人用餐。如果超过8人，就打印一条消息，指出没有空桌；否则指出有空桌。
+
+message = input("How many people are eating here?")
+message = int(message)
+if message > 8:
+    print("There is no table available here.")
+else:
+    print("There are free tables here.")
+
+7-3 10的整数倍：让用户输入一个数字，并指出这个数字是否是10的整数倍
+
+num = input("Please input a number")
+num = int(num)
+if (num % 10 ==0):
+    print(str(num) + " is an integer multiple of 10")
+else:
+    print(str(num) + " is not an integer multiple of 10")
+
+
+
+#用while 循环输出1-5
+number = 1
+while number <= 5:
+    print(number)
+    number += 1
+
+#只要用户不输入'quit'，程序一直运行
+while message != 'quit':
+    message = input("Please input something: ")
+    print(message)
+    
+#break
+在任何Python循环中都可使用break语句来退出遍历列表或字典的for循环
+
+#continue
+退出当前循环进行下一个循环(不是退出整个循环)
+
+
+7-4 比萨配料：编写一个循环，提示用户输入一系列的比萨配料，并在用户输入'quit'时结束循环。
+    每当用户输入一种配料后，都打印一条消息，说我们会在比萨中添加这种配料
+    
+message = "Please enter the ingredients to be added:"
+mixed = input(message)
+while mixed != 'quit':
+    print("We'll add "+ mixed +" to pizza")
+    mixed = input(message)
+
+    
+7-5 电影票：有家电影院根据观众的年龄收取不同的票价：不到3岁的观众免费；3~12岁的观众为10美元；超过12岁的观众为15美元。
+    请编写一个循环，在其中询问用户的年龄，并指出其票价
+    
+while True:
+    message = input("How old are you?")
+    if int(message) < 3:
+        print("The fare is free.")
+    elif int(message) >= 3 and int(message) <= 12:
+        print("The fare is $10.")
+    else:
+        print("The fare is $15.")
+
+
+7-6 三个出口：以另一种方式完成练习7-4和练习7-5，在程序中采取如下所有做法
+    ·在while循环中使用条件测试来结束循环
+    ·使用变量active来控制循环结束的时机
+    ·使用break语句在用户输入'quit'时退出循环
+
+message = "Please enter the ingredients to be added:"
+while True:
+    mixed = input(message)
+    if mixed == 'quit':
+        break
+    print("We'll add " + mixed + " to pizza")
+
+active = True
+while active:
+    message = input("How old are you?")
+    if message == 'quit':
+        active = False
+        break
+    elif int(message) < 3:
+        print("The fare is free.")
+    elif int(message) >= 3 and int(message) <= 12:
+        print("The fare is $10.")
+    else:
+        print("The fare is $15.")
+
+
+
+7-7 无限循环：编写一个没完没了的循环，并运行它
+
+while True:
+    print(1)
+
