@@ -120,3 +120,51 @@ while active:
 while True:
     print(1)
 
+
+7-8 熟食店：创建一个名为sandwich_orders的列表，在其中包含各种三明治的名字；再创建一个名为finished_sandwiches的空列表。
+    遍历列表sandwich_orders，对于其中的每种三明治，都打印一条消息，如I made your tuna sandwich,并将其移到列表finished_sandwiches
+    所有三明治都制作好后，打印一条消息，将这些三明治列出来
+    
+sandwich_orders = ['Meat sandwich', 'Vegetable sandwiches', 'Fried Chicken Chop Sandwich']
+finished_sandwiches = []
+for sandwich in sandwich_orders:
+    print("I made your " + sandwich)
+    finished_sandwiches.append(sandwich)
+
+for finfished in finished_sandwiches:
+    print(finfished)
+    
+
+7-9 五香烟熏牛肉(pastrami)卖完了：使用为完成练习7-8而创建的列表sandwich_orders，并确保'pastrami'在其中至少出现了三次，在程序开头附近添加
+    这样的代码：打印一条消息，指出熟食店的五香烟熏牛肉卖完了；再使用一个while循环将列表sandwich_orders中的'pastrami'都删除。确认最终的列表
+    finished_sandwiches中不包含'pastrami'
+    
+sandwich_orders = ['pastrami', 'Meat sandwich', 'pastrami', 'Vegetable sandwiches', 'pastrami']
+finished_sandwiches = []
+print("Sorry,the pastrami is sold out!")
+while 'pastrami' in sandwich_orders:
+    sandwich_orders.remove('pastrami')
+for sandwich in sandwich_orders:
+    finished_sandwiches.append(sandwich)
+print(finished_sandwiches)
+
+
+7-10 梦想的度假胜地：编写一个程序，调查用户梦想的度假胜地。使用类似于"If you could visit one place in the world, where would you go?"
+     的提示，并编写一个打印调查结果的代码块
+     
+responses ={}
+active = True
+while active:
+    message1 = input("What's your name?")
+    message2 = input("If you could visit one place in the world, where would you go?")
+    responses[message1] = message2
+    message3 = input("Would you like to let another person respond?(yes/no)")
+    if message3 == 'no':
+        active = False
+
+print("--- Poll Results ---")
+for key,value in responses.items():
+    print(key + " would go " + value)
+
+
+
