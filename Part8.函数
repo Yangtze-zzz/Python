@@ -1,0 +1,94 @@
+#定义函数
+
+def greet_user():
+    print("Hello!")
+
+greet_user()
+
+
+def greet_user(username): 
+    print("Hello, " + username.title() + "!")
+
+greet_user('leo')
+
+#形参和实参
+在上述代码块中，变量username是一个形参，值'leo'是一个实参，实参是调用函数时传递给函数的信息
+在greet_user('leo')中，将实参'leo'传递给了函数greet_user()，这个值被存储在了形参username中
+
+
+
+8-1 消息：编写一个名为display_message()的函数，它打印一个句子，指出你在本章学的是什么。调用这个函数，确认显示的消息正确无误
+
+def display_message():
+    print("In this chapter, I'm studying functions.")
+
+display_message()
+
+
+8-2 喜欢的图书：编写一个名为favorite_book()的函数，其中包含一个名为title的形参。这个函数打印一条消息，如
+    One of my favorite_book is Alice in wonderland.调用这个函数，并将一本图书的名称作为实参传递给它。
+
+def favorite_book(book):
+    print("One of my favorite book is "+book)
+
+favorite_book('Alice in wonderland')
+
+
+#位置实参
+
+def describe_pet(animal_type,pet_name):
+    print("\nI have a " + animal_type + ".")
+    print("My " + animal_type + "'s name is " + pet_name.title() + ".")
+
+describe_pet('hamster','harry')
+
+#关键字实参
+
+def describe_pet(animal_type,pet_name):
+    print("\nI have a " + animal_type + ".")
+    print("My " + animal_type + "'s name is " + pet_name.title() + ".")
+
+describe_pet(animal_type = 'hamster',pet_name = 'harry')
+
+
+#默认值
+使用默认值的时候，在形参列表中必须先列出没有默认值的形参，在列出有默认值的形参
+def describe_pet(pet_name,animal_type='dog'):
+    print("\nI have a " + animal_type + ".")
+    print("My " + animal_type + "'s name is " + pet_name.title() + ".")
+
+describe_pet(pet_name='whillie')      #describe_pet('whillie')
+
+
+
+8-3 T恤：编写一个名为make_shirt()的函数，它接受一个尺码以及要印到T恤上的字样。这个函数应打印一个句子，概要地说明T恤的尺码和字样
+
+def make_shirt(size, word):
+    print("Your size is " + size)
+    print("The words you need to print on your T-shirt are " + word)
+
+make_shirt('L', 'Who am I')
+
+make_shirt(size='L', word='Who am I')
+
+
+8-4 大号T恤：修改函数make_shirt()，使其在默认情况下制作一件印有字样"I love Python"的大号T恤。调用这个函数来制作如下T恤：
+    一件印有默认字样的大号T恤、一件印有默认字样的中号T恤和一件印有其他字样的T恤(尺码无关紧要)
+    
+def make_shirt(size='Large', word='I love Python'):
+    print("Your size is " + size)
+    print("The words you need to print on your T-shirt are " + word)
+
+make_shirt()
+make_shirt(size='Middle')
+make_shirt(word="Who am I")
+
+8-5 城市：编写一个名为describe_city()的函数，它接受一座城市的名字以及该城市所属的国家。这个函数应打印一个简单的句子，如
+    Reykjavik is in Iceland 。给用于存储国家的形参指定默认值。为三座不同的城市调用这个函数，且其中至少有一座城市不属于默认国家
+    
+def describe_city(city, country='China'):
+    print(city + " is in " + country)
+
+describe_city('Hangzhou')
+describe_city('Shanghai')
+describe_city('New York', 'America')
