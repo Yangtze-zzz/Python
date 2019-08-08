@@ -102,3 +102,336 @@ def get_formatted_name(first_name,last_name):
 
 musician = get_formatted_name('jimi', 'hendrix')
 print(musician)
+
+
+#返回字典
+def build_person(first_name, last_name):
+    person = {'first': first_name, 'last': last_name}
+    return person
+
+musician = build_person('jimi', 'hendrix')
+print(musician)
+
+#存储信息并且能够修改信息
+def build_person(first_name, last_name, age=''):
+    person = {'first': first_name, 'last': last_name}
+    if age:
+        person['age'] = age
+    return person
+
+musician = build_person('jimi', 'hendrix',27)
+print(musician)
+
+
+
+8-6 城市名：编写一个名为city_country()的函数，它接受城市的名称及其所属的国家。这个函数应返回一个格式类似于下面这样的字符串：
+    "Santiago,Chile"
+    至少使用三个城市-国家对调用这个函数，并打印它返回的值
+    
+def city_country(city,country):
+    word = city.title() + ", " + country.title()
+    return word
+
+name = city_country('Hangzhou', 'China')
+print('\"' + name + '\"')
+name = city_country('beijng', 'china')
+print('\"' + name + '\"')
+name = city_country('New York', 'America')
+print('\"' + name + '\"')
+
+8-7 专辑：编写一个名为make_album()的函数，它创建一个描述音乐专辑的字典。这个函数应接受歌手的名字和专辑名,并返回一个包含这两项
+    信息的字典。使用这个函数创建三个表示不同专辑的字典，并打印每个返回的值，以核实字典正确地存储了专辑的信息
+    给函数make_album()添加一个可选形参，以便能够存储专辑包含的歌曲数。如果调用这个函数时指定了歌曲数，就将这个值添加到表示专辑
+    的字典中。调用这个函数，并至少在一次调用中指定专辑包含的歌曲数
+
+def make_album(singer_name, album_name, num=''):
+    music = {'singer': singer_name, 'album': album_name}
+    if num:
+        music['number'] = num
+    return music
+
+message = make_album('OneRepublic', 'Native')
+print(message)
+message = make_album('Madison Beer', 'POP/STARS', 2)
+print(message)
+
+
+8-8 用户的专辑：在为完成练习8-7编写的程序中，编写一个while循环，让用户输入一个专辑的歌手和名称。获取这些信息后，使用它们来调用函数make_album()，
+    并将创建的字典打印出来。在这个while循环中，务必要提供退出途径。
+    
+def make_album(singer_name, album_name, num=''):
+    music = {'singer': singer_name, 'album': album_name}
+    if num:
+        music['number'] = num
+    return music
+
+while True:
+    print("Please enter the singer:")
+    print("You can enter 'q' at any time to quit")
+    message1 = input()
+    if message1 == 'q':
+        break
+    print("Please enter the album:")
+    print("You can enter 'q' at any time to quit")
+    message2 = input()
+    if message1 == 'q':
+        break
+    message = make_album(message1, message2)
+    print(message)
+
+
+#传递列表
+def greet_users(names):
+    for name in names:
+        msg = "Hello, " + name.title() + "!"
+        print(msg)
+
+usernames = ['hannah', 'ty', 'margot']
+greet_users(usernames)
+
+
+#在函数中修改列表
+def print_models(unprinted_designs, completed_models):
+    while unprinted_designs:
+        current_design = unprinted_designs.pop()
+        print("Printing model: " + current_design)
+        completed_models.append(current_design)
+
+
+def show_completed_models(completed_models):
+    print("\nThe following models have been printed:")
+    for completed_model in completed_models:
+        print(completed_model)
+
+unprinted_designs = ['ipones case', 'rotot pendant', 'dodecahedron']
+completed_models = []
+
+print_models(unprinted_designs,completed_models)
+show_completed_models(completed_models)
+
+#如果想要保留原件(unprinted_designs)
+print_models(unprinted_designs[:],completed_models)
+此时它使用的是列表unprinted_designs的副本
+
+
+8-9 魔术师：创建一个包含魔术师名字的列表，并将其传递给一个名为show_magicians()的函数，这个函数打印列表中每个魔术师的名字
+
+def show_magicians(magicians_name):
+    for magician in magicians_name:
+        print(magician)
+
+magicians = ['Mike', 'Alice', 'Amy']
+show_magicians(magicians)
+
+8-10 了不起的魔术师：在你为完成练习8-9而编写的程序中，编写一个名为make_great()的函数，对魔术师列表进行修改，在每个魔术师的名字中都加入字样
+     "the Great"。调用函数show_magicians(),确认魔术师列表确实变了
+     
+def show_magicians(magicians_name):
+    for magician in magicians_name:
+        print(magician)
+
+def make_great(magicians,great_magicians):
+    while magicians:
+        magician = magicians.pop()
+        great_magician = "the Great " + magician
+        great_magicians.append(great_magician)
+
+magicians = ['Mike', 'Alice', 'Amy']
+great_magicians = []
+make_great(magicians,great_magicians)
+show_magicians(great_magicians)
+
+
+
+8-11 不变的魔术师：修改你为了完成练习8-10而编写的程序，在调用函数make_great()时，向它传递魔术师列表的副本。由于不想修改原始列表，请返回修改
+     后的列表，并将其存储到另一个列表中。分别使用这两个列表来调用show_magicians()，确认一个列表包含的是原来的魔术师的名字，而另一个列表包含
+     的是添加了字样"the Great"的魔术师名字
+     
+def show_magicians(magicians_name):
+    for magician in magicians_name:
+        print(magician)
+
+def make_great(magicians,great_magicians):
+    while magicians:
+        magician = magicians.pop()
+        great_magician = "the Great " + magician
+        great_magicians.append(great_magician)
+
+magicians = ['Mike', 'Alice', 'Amy']
+great_magicians = []
+make_great(magicians[:],great_magicians)
+show_magicians(great_magicians)
+show_magicians(magicians)
+
+
+
+#传递任意数量的实参
+def make_pizza(*toppings):
+    print(toppings)
+    
+make_pizza('pepperoni')
+make_pizza('mushrooms', 'green peppers', 'extra cheese')
+
+# *toppings 中的星号让Python创建一个名为toppings的空元组，并将收到的所有值都封装到这个元组中
+
+如果要让函数接受不同类型的实参，必须在函数定义中将接纳任意数量实参的形参放在最后
+Python先匹配位置实参和关键词实参，再余下的实参都收集到最后一个形参中
+
+def make_pizza(size,*toppings)
+
+
+#使用任意数量的关键字实参
+def build_porfile(first, last, **user_info):
+    profile={}
+    profile[first] = first
+    profile[last] = last
+    for key, value in user_info.items():
+        profile[key] = value
+    return profile
+
+user_profile = build_porfile('alert','einstein',
+                             location='princeton',
+                             field='physics')
+print(user_profile)
+
+
+8-12 三明治：编写一个函数，它接受顾客要在三明治中添加一系列食材。这个函数只有一个形参(它收集函数调用中提供的所有食材)，并打印一条消息，
+     对顾客点的三明治进行概述。调用这个函数三次，每次都提供不同数量的实参
+     
+def order_food(*toppings):
+    print("Making a pizza with the following toppings:")
+    for t in toppings:
+        print("-" + t)
+
+order_food('mushrooms')
+order_food('extra cheese', 'green peppers')
+
+
+8-13 用户简介：复制前面的程序user_profile.py，在其中调用build_profile()来创建有关你的简介；调用这个函数时，指定你的名和姓，
+     以及三个描述你的键-值对
+
+def build_porfile(first, last, **user_info):
+    profile={}
+    profile[first] = first
+    profile[last] = last
+    for key, value in user_info.items():
+        profile[key] = value
+    return profile
+
+user_profile = build_porfile('Jason','Huang',
+                             location='China',
+                             field='coding',
+                             hobby='reading'
+                             )
+print(user_profile)
+
+
+8-14 汽车：编写一个函数，将一辆汽车的信息存储在一个字典中。这个函数总是接受制造商和型号，还接受任意数量的关键词实参。这样调用这个函数：
+     提供必不可少的信息，以及两个名称-值对，如颜色和选装配件。这个函数必须能够像下面这样进行调用：
+     car = make_car('subaru', 'outback', color='blue', tow_package=True)
+     
+def make_car(manufacturer,model,**other):
+    car = {}
+    car[manufacturer] = manufacturer
+    car[model] = model
+    for key,value in other.items():
+        car[key] = value
+    return  car
+
+car = make_car('subaru', 'outback', color='blue', tow_package=True)
+print(car)
+
+
+#导入整个模块
+
+pizza.py
+def make_pizza(size,*toppings):
+    print("\nMaking a " + str(size) + "-inch pizza with the following toppings:")
+    for topping in toppings:
+        print("- " + topping)
+
+test.py
+import pizza
+pizza.make_pizza(16,'pepperoni')
+
+
+#如果只需要导入模块中的特定函数
+from module_name import function_name1,function_name2
+如：
+from pizza import make_pizza
+make_pizza(16,'pepperoni')
+
+
+#使用as给函数指定别名
+from pizza import make_pizza as mp
+mp(16,'pepperoni')
+
+
+#使用as给模块指定别名
+import pizza as p
+p.make_pizza(16,'pepperoni')
+
+#导入模块中的所有函数
+from pizza import *
+make_pizza(16,'pepperoni')
+
+
+
+8-15 打印模型：将示例print_models.py中的函数放在另一个名为printing_functions.py的文件中；在print_models.py的开头编写一条import语句，
+     并修改整个文件以使用导入的函数
+
+printing_functions.py
+def print_models(unprinted_designs, completed_models):
+    """
+    模拟打印每个设计，直到没有未打印的设计为止
+    打印每个设计后，都将其移到列表completed_models中
+    """
+    while unprinted_designs:
+        current_design = unprinted_designs.pop()
+
+        # 模拟根据设计制作3D打印模型的过程
+        print("Printing model: " + current_design)
+        completed_models.append(current_design)
+
+
+def show_completed_models(completed_models):
+    """显示打印好的所有模型"""
+    print("\nThe following models have been printed:")
+    for completed_model in completed_models:
+        print(completed_model)
+
+
+print_models.py
+import printing_functions as p
+
+unprinted_designs = ['iphone case', 'robot pendant', 'dodecahedron']
+completed_models = []
+
+p.print_models(unprinted_designs, completed_models)
+p.show_completed_models(completed_models)
+
+8-16 导入：选择一个你编写的且只包含一个函数的程序，并将整个函数放在另一个文件中。在主程序中，使用下述各种方法导入整个函数，再调用它
+     import module_name
+     from module_name import function_name
+     from module_name import function_name as fn
+     import module_name as mn
+     from module_name import *
+
+display.py
+def display_message():
+    print('Hello, Python!')
+    
+import display
+display.display_message()
+
+from display import display_message
+display_message()
+
+from display import display_message as dm
+dm()
+
+import display as dm
+dm.display_message()
+
+from display import *
+display_message()
