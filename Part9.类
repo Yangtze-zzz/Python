@@ -184,3 +184,274 @@ print(user.login_attempts)
 user.reset_login_attempts()
 print(user.login_attempts)
 
+
+
+
+#继承
+class Car():
+
+    def __init__(self,make,model,year):
+        self.make = make
+        self.model = model
+        self. year = year
+        self. odometer_reading = 0
+
+    def get_describe_name(self):
+        long_name = str(self.year) + ' ' + self.make + ' ' +self.model
+        return long_name.title()
+
+    def read_odometer(self):
+        print("This car has " + str(self.odometer_reading) + " miles on it.")
+
+
+class ElectricCar(Car):
+
+    def __init__(self,make,model,year):
+        super().__init__(make,model,year)
+
+my_tesla = ElectricCar('tesla', 'model s', 2016)
+print(my_tesla.get_describe_name())
+
+创建子类时，父类必须包含在当前文件中，且位于子类前面
+定义子类时，必须在括号内指定父类的名称
+
+#给予类定义属性和方法
+
+class ElectricCar(Car):
+
+    def __init__(self,make,model,year):
+        super().__init__(make,model,year)
+        self.battery_size = 70
+    
+    def describe_battery(self):
+        print("This car has a " + str(self.battery_size) + "-kWh battery.")
+
+my_tesla = ElectricCar('tesla', 'model s', 2016)
+print(my_tesla.get_describe_name())
+my_tesla.describe_battery()
+
+
+#重写父类方法
+假设Car类中有一个名为fill_gas_tank()的方法，它对全电动汽车来说毫无意义
+class ElectricCar(Car):
+    --snip--
+    
+    def fill_gas_tank(self):
+        print("This car doesn't need a gas tank!")
+
+
+#将实例用作属性
+class Car():
+
+    def __init__(self,make,model,year):
+        self.make = make
+        self.model = model
+        self. year = year
+        self. odometer_reading = 0
+
+    def get_describe_name(self):
+        long_name = str(self.year) + ' ' + self.make + ' ' +self.model
+        return long_name.title()
+
+    def read_odometer(self):
+        print("This car has " + str(self.odometer_reading) + " miles on it.")
+
+
+class Battery():
+
+    def __init__(self, battery_size=70):
+        self.battery_size = battery_size
+
+    def describe_battery(self):
+        print("This car has a " + str(self.battery_size) + "-kWh battery.")
+
+
+class ElectricCar(Car):
+
+    def __init__(self, make, model, year):
+        super().__init__(make, model, year)
+        self.battery = Battery()
+
+
+my_tesla = ElectricCar('tesla', 'model s', 2016)
+print(my_tesla.get_describe_name())
+my_tesla.battery.describe_battery()
+
+
+9-6 冰淇淋小店：冰淇淋小店是一种特殊的餐馆。编写一个名为IceCreamStand的类，让它继承你为完成练习9-1或练习9-4而编写的Restaurant类。这两个版本
+    的Resaurant类都可以，挑选你更喜欢的那个即可。添加一个名为flavors的属性，用于存储一个由各种口味的冰淇淋组成的列表。编写一个显示这些冰淇淋
+    的方法。创建一个IceCreamStand实例，并调用这个方法。
+    
+class Restaurant():
+
+    def __init__(self, restaurant_name, cuisine_type):
+        self.restaurant_name = restaurant_name
+        self.cuisine_type = cuisine_type
+
+    def describe_restaurant(self):
+        print(self.restaurant_name)
+        print(self.cuisine_type)
+
+    def open_restaurant(self):
+        print("The restaurant is open")
+
+class IceCreamStand(Restaurant):
+
+    def __init__(self, restaurant_name, cuisine_type):
+        super().__init__(restaurant_name, cuisine_type)
+        self.flavors = ['Strawberry', 'Mango', 'Watermelon']
+
+    def show_flavors(self):
+        print(self.flavors)
+
+my_flavors = IceCreamStand('Ice','Dessert')
+my_flavors.show_flavors()
+
+
+9-7 管理员：管理员是一种特殊的用户。编写一个名为Admin的类，让它继承你为完成练习9-3或练习9-5而编写的User类。添加一个名为privileges的属性，用于
+    存储一个由字符串(如"can add post"、"can delet post"、"can ban user"等)组成的列表。编写一个名为show_privileges()的方法，它显示管理员的
+    权限。创建一个Admin实例，并调用这个方法
+
+class User():
+
+    def __init__(self,first_name,last_name,age):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.age = age
+
+    def describe_user(self):
+        print(self.first_name)
+        print(self.last_name)
+        print(self.age)
+
+    def greet_user(self):
+        full_name = self.first_name + " " +self.last_name
+        print("Hello, " + full_name)
+
+
+class Admin(User):
+
+    def __init__(self, first_name, last_name, age):
+        super().__init__(first_name, last_name, age)
+        self.privileges = ['can add post', 'can delete post', 'can ban user']
+
+    def show_privileges(self):
+        print(self.privileges)
+
+people =Admin('h', 'cj', '22')
+people.show_privileges()
+
+
+9-8 权限：编写一个名为Privileges的类，它只有一个属性——privileges，其中存储了练习9-7所说的字符串列表。将方法show_privileges()移到这个类中。
+    在Admin类中，将一个Privileges实例用作其属性。创建一个Admin实例，并使用方法show_prvileges()来显示其权限
+
+class User():
+
+    def __init__(self,first_name,last_name,age):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.age = age
+
+    def describe_user(self):
+        print(self.first_name)
+        print(self.last_name)
+        print(self.age)
+
+    def greet_user(self):
+        full_name = self.first_name + " " +self.last_name
+        print("Hello, " + full_name)
+
+
+class Privileges():
+
+    def __init__(self, privileges=[]):
+        self.privileges = privileges
+
+    def show_privileges(self):
+        for privilege in self.privileges:
+            print("Admin" + privilege)
+
+
+class Admin(User):
+
+    def __init__(self, first_name, last_name, age):
+        super().__init__(first_name, last_name, age)
+        self.privileges = Privileges()
+
+
+people =Admin('Z', 'K', '22')
+people.privileges.privileges =[' can add post', ' can delete post', ' can ban user']
+people.privileges.show_privileges()
+
+
+9-9 电瓶升级：在本节最后一个electric_car.py版本中，给Battery类添加一个名为upgrade_battery()的方法。这个方法检查电瓶容量，如果它不是85，
+    就将它设置为85.创建一辆电瓶容量为默认值的电动汽车，调用方法get_range()，然后对电瓶进行升级，并再次调用get_range()。你会看到这辆汽车
+    的续航里程增加了
+
+class Car():
+
+    def __init__(self,make,model,year):
+        self.make = make
+        self.model = model
+        self. year = year
+        self. odometer_reading = 0
+
+    def get_describe_name(self):
+        long_name = str(self.year) + ' ' + self.make + ' ' +self.model
+        return long_name.title()
+
+    def read_odometer(self):
+        print("This car has " + str(self.odometer_reading) + " miles on it.")
+
+
+class ElectricCar(Car):
+
+    def __init__(self, make, model, year):
+        super().__init__(make, model, year)
+        self.battery = Battery()
+
+
+class Battery():
+
+    def __init__(self, battery_size=70):
+        self.battery_size = battery_size
+
+    def describe_battery(self):
+        print("This car has a " + str(self.battery_size) + "-kWh battery.")
+
+    def get_range(self):
+        if self.battery_size ==70:
+            range = 240
+        elif self.battery_size == 85:
+            range = 270
+
+        message = "This car can go approximately " + str(range)
+        message += " miles on a full charge."
+        print(message)
+
+    def upgrade_battery(self):
+        if self.battery_size != 85:
+            self.battery_size = 85
+
+
+my_tesla = ElectricCar('tesla', 'model s', 2016)
+print(my_tesla.get_describe_name())
+my_tesla.battery.get_range()
+my_tesla.battery.upgrade_battery()
+my_tesla.battery.get_range()
+
+
+#导入单个类
+car.py
+class Car():....
+
+from car import Car
+
+#从一个模块中导入多个类
+from car import Car,ElectricCar
+
+#导入整个模块
+import car
+
+#导入模块中的所有类
+from module_name import *
