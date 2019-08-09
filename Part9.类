@@ -1,0 +1,186 @@
+#创建Dog类
+class Dog():
+
+    def __init__(self,name,age):
+        self.name = name
+        self.age = age
+
+    def sit(self):
+        print(self.name.title() + " is now sitting.")
+
+    def roll_over(self):
+        print(self.name.title() + "rolled over!")
+
+
+
+#根据类创建实例
+class Dog():
+    --snip--
+    
+my_dog = Dog('willie', 6)
+print(my_dog.name.title())
+print(my_dog.age)        #访问属性
+
+#调用方法
+my_dog.sit()             #Willie is now sitting.
+my_dog.roll_over()       #Willie rolled over!
+
+
+
+9-1 餐馆：创建一个名为Restaurant的类，其方法__init__()设置两个属性：restaurant_name和cuisine_type。创建一个名为describe_restaurant()的方法
+    和一个名为open_restaurant()的方法，其中前者打印前述两项消息，而后者打印一条消息，指出餐馆正在营业
+    根据这个类创建一个名为restaurant的实例，分别打印其两个属性，再调用前述两个方法
+
+class Restaurant():
+
+    def __init__(self, restaurant_name, cuisine_type):
+        self.restaurant_name = restaurant_name
+        self.cuisine_type = cuisine_type
+
+    def describe_restaurant(self):
+        print(self.restaurant_name)
+        print(self.cuisine_type)
+
+    def open_restaurant(self):
+        print("The restaurant is open")
+
+restaurant = Restaurant('FullFunny', 'Bar')
+print(restaurant.restaurant_name)
+print(restaurant.cuisine_type)
+restaurant.describe_restaurant()
+restaurant.open_restaurant()
+
+
+9-2 三家餐馆：根据你为完成练习9-1而编写的类创建三个实例，并对每个实例调用方法describe_restaurant()
+
+restaurant2 = Restaurant('Greatful', 'Fast food')
+restaurant2.describe_restaurant()
+
+9-3 用户：创建一个名为User的类，其中包含属性first_name和last_name，还有用户简介通常会存储的其他几个属性。在类User中定义一个名为describe_user()
+    的方法，它打印用户信息摘要；再定义一个名为greet_user()的方法，它向用户发出个性化的问候。
+    创建多个表示不同用户的实例，并对每个实例都调用上述两个方法
+    
+class User():
+
+    def __init__(self,first_name,last_name,age):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.age = age
+
+    def describe_user(self):
+        print(self.first_name)
+        print(self.last_name)
+        print(self.age)
+
+    def greet_user(self):
+        full_name = self.first_name + " " +self.last_name
+        print("Hello, " + full_name)
+
+user = User('Lin', 'Zhi', 18)
+user.describe_user()
+user.greet_user()
+
+
+#给属性设定默认值
+class Car():
+
+    def __init__(self,make,model,year):
+        self.make = make
+        self.model = model
+        self. year = year
+        self. odometer_reading = 0
+
+    def get_describe_name(self):
+        long_name = str(self.year) + ' ' + self.make + ' ' +self.model
+        return long_name.title()
+
+    def read_odometer(self):
+        print("This car has " + str(self.odometer_reading) + " miles on it.")
+
+my_new_car = Car('audi', 'a4', 2016)
+print(my_new_car.get_describe_name())
+my_new_car.read_odometer()
+
+
+#修改属性的值
+my_new_car.odometer_reading = 23
+
+#通过方法修改属性的值
+    def update_odometer(self,mileage):
+        self.odometer_reading = mileage
+        
+my_new_car.update_odometer(23)
+
+
+9-4 就餐人数：在为完成练习9-1而编写的程序中，添加一个名为number_served的属性，并将其默认值设置为0.根据这个类别创建一个名为restaurant的实例；
+    打印有多少人在这家餐馆就餐过，然后修改这个值并再次打印它
+    添加一个名为set_number_served()的方法，它让你能够设置就餐人数。调用这个方法并向它传递一个值，然后再次打印这个值
+    添加一个名为increment_number_served()的方法，它让你能够将就餐人数递增。调用这个方法并向它传递一个这样的值：你认为这家餐馆每天可能接待的
+    就餐人数
+    
+class Restaurant():
+
+    def __init__(self, restaurant_name, cuisine_type):
+        self.restaurant_name = restaurant_name
+        self.cuisine_type = cuisine_type
+        self.number_served = 0
+
+    def describe_restaurant(self):
+        print(self.restaurant_name)
+        print(self.cuisine_type)
+
+    def open_restaurant(self):
+        print("The restaurant is open")
+
+    def set_number_served(self, set_number):
+        self.set_number =set_number
+
+    def increment_number_served(self,people):
+        self.number_served += people
+
+
+restaurant = Restaurant('FullFunny', 'Bar')
+restaurant.number_served = 20
+restaurant.set_number_served(30)
+print("Set the number of meals to " + str(restaurant.set_number))
+print("Here are " + str(restaurant.number_served) +" people at dinner.")
+restaurant.increment_number_served(5)
+print(restaurant.number_served)
+
+
+9-5 尝试登录次数：在为完成练习9-3而编写的User类中，添加一名为login_attempts的属性。编写一个名为increment_login_attempts()的方法，他将属性
+    login_attempts的值加1.再编写一个名为reset_login_attempts()的方法，它将属性login_attempts的值重置为0.
+    根据User类创建一个实例，再调用方法increment_login_attempts()多次。打印属性login_attempts的值，确认它被正常地传递；然后，调用方法
+    reset_login_attempts()，并再次打印属性login_attempts的值，确认它被重置为0
+
+class User():
+
+    def __init__(self,first_name,last_name,age):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.age = age
+        self.login_attempts = 0
+
+    def increment_login_attempts(self):
+        self.login_attempts += 1
+
+    def reset_login_attempts(self):
+        self.login_attempts = 0
+
+    def describe_user(self):
+        print(self.first_name)
+        print(self.last_name)
+        print(self.age)
+
+    def greet_user(self):
+        full_name = self.first_name + " " +self.last_name
+        print("Hello, " + full_name)
+
+user = User('Lin', 'Zhi', 18)
+user.increment_login_attempts()
+user.increment_login_attempts()
+user.increment_login_attempts()
+print(user.login_attempts)
+user.reset_login_attempts()
+print(user.login_attempts)
+
