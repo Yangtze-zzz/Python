@@ -455,3 +455,196 @@ import car
 
 #导入模块中的所有类
 from module_name import *
+
+#在一个模块中导入另一个模块
+electric_car.py
+from car import Car
+
+class Battery():
+    --snip--
+
+class ElectricCar(Car):
+    --snip--
+    
+car.py
+class Car():
+    --snip--
+    
+my_cars.py
+from car import Car
+from electric_car import ElectricCar
+
+my_beetle = Car('volkswagen', 'beetle', 2016)
+print(my_beetle.get_descriptive_name())
+my_tesla = ElectricCar('tesla', 'roadster', 2016)
+print(my_tesla.get_descriptive_name())
+
+
+9-10 导入Restaurant类：将最新的Restaurant类存储在一个模块中。在另一个文件中，导入Restaurant类，创建一个Restaurant实例，并调用Restaurant的
+     一个方法，以确认import语句正确无误
+     
+from restaurant import Restaurant
+
+r = Restaurant('GoodFast', 'Fast Food')
+r.describe_restaurant()
+
+
+9-11 导入Admin类：以为完成练习9-8而做的工作为基础，将User、Privileges和Admin类存储在一个模块中，再创建一个文件，在其中创建一个Admin实例并对
+     其调用方法show_privileges()，以确认一切都能正常地运行
+     
+new_Admin.py
+
+class User():
+
+    def __init__(self,first_name,last_name,age):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.age = age
+
+    def describe_user(self):
+        print(self.first_name)
+        print(self.last_name)
+        print(self.age)
+
+    def greet_user(self):
+        full_name = self.first_name + " " +self.last_name
+        print("Hello, " + full_name)
+
+
+class Privileges():
+
+    def __init__(self, privileges=[' can add post', ' can delete post', ' can ban user']):
+        self.privileges = privileges
+
+    def show_privileges(self):
+        for privilege in self.privileges:
+            print("Admin" + privilege)
+
+
+class Admin(User):
+
+    def __init__(self, first_name, last_name, age):
+        super().__init__(first_name, last_name, age)
+        self.privileges = Privileges()
+
+test.py
+
+from new_Admin import Admin
+
+admin = Admin('Michael','Jordan',30)
+admin.privileges.show_privileges()
+
+
+
+9-12 多个模块：将User类存储在一个模块中，并将Privileges和Admin类存储在另一个模块中。再创建一个文件，在其中创建一个Admin实例，并对其调用方法
+     show_privileges(),以确认一切都依然能够正确地运行
+     
+new_User.py
+
+class User():
+
+    def __init__(self,first_name,last_name,age):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.age = age
+
+    def describe_user(self):
+        print(self.first_name)
+        print(self.last_name)
+        print(self.age)
+
+    def greet_user(self):
+        full_name = self.first_name + " " +self.last_name
+        print("Hello, " + full_name)
+
+
+new_Admin.py
+
+from new_User import User
+
+class Privileges():
+
+    def __init__(self, privileges=[' can add post', ' can delete post', ' can ban user']):
+        self.privileges = privileges
+
+    def show_privileges(self):
+        for privilege in self.privileges:
+            print("Admin" + privilege)
+
+
+class Admin(User):
+
+    def __init__(self, first_name, last_name, age):
+        super().__init__(first_name, last_name, age)
+        self.privileges = Privileges()
+
+
+
+
+test.py
+
+from new_User import User
+from new_Admin import Admin
+
+admin = Admin('Michael','Jordan',30)
+admin.privileges.show_privileges()
+
+
+
+#Python标准库
+
+模块collections中的OrderedDict类  能够创建字典并记录其中键-值对的添加顺序
+
+9-13 使用OrderedDict：在练习6-4中，你使用了一个标准字典来表示词汇表。请使用OrderedDict类来重写这个程序，并确认输出的顺序与你在字典中添加
+     键-值对的顺序一致
+     
+from collections import OrderedDict
+
+Word = OrderedDict()
+
+Word['int'] = 'integer number'
+Word['print'] = 'a function to print something on the screen'
+Word['char'] = 'the base element of string'
+Word['if'] = 'judgment conditions'
+
+for key,value in Word.items():
+    print(key +': '+value)
+    
+    
+9-14 骰子：模块random包含以各种方式生成随机数的函数，其中random()返回一个位于指定范围内的整数，例如，下面的代码返回一个1~6内的整数：
+     from random import randint
+     x = randint(1,6)
+     请创建一个Die类，它包含一个名为sides的属性，该属性的默认值为6.编写一个名为roll_die()的方法，它打印位于1鹅骰子面数之间的随机数。创建一个
+     6面的骰子，再掷10次
+     创建一个10面的骰子和一个20面的骰子，并将它们都掷10次
+     
+from random import randint
+
+class Die():
+
+    def __init__(self,sides=6):
+        self.sides = sides
+
+    def roll_die(self):
+        number = randint(1,self.sides)
+        return number
+
+
+r = Die()
+for i in range(11):
+    x = r.roll_die()
+print(x)
+
+r = Die(10)
+for i in range(11):
+    x = r.roll_die()
+print(x)
+
+r = Die(20)
+for i in range(11):
+    x = r.roll_die()
+print(x)
+
+
+#类名 采用驼峰命名法：每个单词首字母大写而不使用下划线
+实例名和模块名都采用小写格式，并在单词之间加下划线
