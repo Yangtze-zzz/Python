@@ -154,6 +154,242 @@ except FileNotFoundError:
     pass
 else:
     --snip--
-
 当程序发生异常时不会出现traceback，也没有任何输出
+
+
+10-6 加法运算：提示用户提供数值输入时，常出现的一个问题是，用户提供的是文本而不是数字。在这种情况下，当你尝试将输入转换为整数时，将引发
+     ValueError异常。编写一个程序，提示用户输入两个字，再将它们相加并打印结果。在用户输入的任何一个值不是数字时都捕获ValueError异常，
+     并打印一条友好的错误信息。对你编写的程序进行测试：先输入两个数字，再输入一些文本而不是数字
+
+first_num = input("Please enter a number:")
+another_num = input("Please enter another number:")
+try:
+    answer = int(first_num) + int(another_num)
+except ValueError:
+    print("please enter an integer!")
+else:
+    print(answer)
     
+
+10-7 加法计算器：将你为完成练习10-6而编写的代码放在一个while循环中，让用户犯错(输入的是文本而不是数字)后能够继续输入数字
+
+while True:
+    try:
+        first_num = input("Please enter a number:")
+        another_num = input("Please enter another number:")
+        answer = int(first_num) + int(another_num)
+    except ValueError:
+        print("please enter an integer!")
+    else:
+        print(answer)
+        active = False
+        break
+        
+ 10-8 猫和狗：创建两个文件cats.txt和dog.txt，在第一个文件中至少存储三只猫的名字，在第二个文件中至少存储三条狗的名字。编写一个程序，尝试读取
+      这些文件，并将其打印到屏幕上。将这些代码放在一个try-except代码块中，以便在文件不存在时捕获FileNotFound错误，并打印一条友好的消息。将
+      其中一个文件转移到另一个地方，并确认except代码块中的代码将正确地执行。
+
+try:
+    with open('dogs.txt', 'r') as file_object:
+        contexts = file_object.read()
+        print(contexts.rstrip())
+
+    with open('cats.txt', 'r') as file_object:
+        contexts = file_object.read()
+        print(contexts.rstrip())
+except FileNotFoundError:
+    print("I can't found it!")
+
+
+10-9 沉默的猫和狗：修改你在练习10-8中编写的except代码块，让程序在文件不存在时一言不发
+
+try:
+    with open('dogs.txt', 'r') as file_object:
+        contexts = file_object.read()
+        print(contexts.rstrip())
+
+    with open('cats.txt', 'r') as file_object:
+        contexts = file_object.read()
+        print(contexts.rstrip())
+except FileNotFoundError:
+    pass
+
+
+
+#count()
+能够确定特定单词或短语在字符串中出现了多少次
+
+line = "Row,row,row your boat"
+line.count('row')               #2
+line.lower().count('row')       #3
+
+
+#存储数据
+json.dump()
+
+import json
+
+numbers = [2,3,5,7,11,13]
+filename = 'number.json'
+with open(filename,'w') as f_obj:
+    json.dump(numbers, f_obj)
+    
+json.load()
+
+import json
+
+filename = 'number.json'
+with open(filename) as f_obj:
+    numbers = json.load(f_obj)
+    
+print(numbers)
+
+
+#存储用户名字
+import json
+
+username = input("What is your name? ")
+
+filename = 'username.json'
+with open(filename,'w') as f_obj:
+    json.dump(username,f_obj)
+    print("We'll remember you when you come back," + username + "!")
+    
+#向被存储的用户发出问候
+import json
+
+filename = 'username.json'
+
+with open(filename) as f_obj:
+    username = json.load(f_obj)
+    print("Welcome back," + username + "!")
+
+
+#上述两个合成
+import json
+
+filename = 'username.json'
+try:
+    with open(filename) as f_obj:
+        username = json.load(f_obj)
+except FileNotFoundError:
+    username = input("What is your name? ")
+    with open(filename, 'w') as f_obj:
+        json.dump(username, f_obj)
+        print("We'll remember you when you come back," + username + "!")
+else:
+    print("Welcome back," + username + "!")
+
+
+
+#重构
+将代码划分为一系列完成具体工作的函数
+import json
+
+def get_stored_username():
+    filename = 'username.json'
+    try:
+        with open(filename) as f_obj:
+            username = json.load(f_obj)
+    except FileNotFoundError:
+        return None
+    else:
+        return username
+
+def get_new_username():
+    username = input("What is your name? ")
+    filename = 'username.json'
+    with open(filename, 'w') as f_obj:
+        json.dump(username, f_obj)
+    return username
+
+def greet_user():
+    username = get_stored_username()
+    if username:
+        print("Welcome back," + username + "!")
+    else:
+        username = get_new_username()
+        print("We'll remember you when you come back, " + username + "!")
+
+greet_user()
+
+
+10-11 喜欢的数字：编写一个程序，提示用户输入他喜欢的数字，并使用json.dump()将这个数字存储到文件中。再编写一个程序，从文件中读取这个值，
+      并打印消息“I know your favourite number! It’s _____.”。
+      
+import json
+
+number = input("What's your favorite number?")
+filename = 'favorite_number.json'
+with open(filename, 'w') as f:
+    json.dump(number, f)
+
+with open(filename) as f:
+    json.load(f)
+    print("I know your favorite number! It's " + number )
+    
+
+10-12 记住喜欢的数字：将练习 10-11 中的两个程序合而为一。如果存储了用户喜欢的数字，就向用户显示它，否则提示用户输入他喜欢的数字并将其存储到
+      文件中。运行这个程序两次，看看它是否像预期的那样工作。
+      
+import json
+
+def get_number():
+    filename = 'favorite_number.json'
+    try:
+        with open(filename) as f:
+            number = json.load(f)
+    except FileNotFoundError:
+        return None
+    else:
+        return number
+
+def show_number():
+    number = get_number()
+    if number:
+        print("I know your favorite number! It's " + number + "!")
+    else:
+        number = input("What's your favorite number?")
+        filename = 'favorite_number.json'
+        with open(filename, 'w') as f:
+            json.dump(number, f)
+
+show_number()
+
+
+
+10-13 验证用户：最后一个remember_me.py版本假设用户要么已输入其用户名，要么是首次运行该程序。我们应修改这个程序，以应对这样的情形；
+      当前和最后一次运行该程序的用户并非同一个人。为此，在greet_user()中打印欢迎用户回来的消息前，先询问他用户名是否是对的。
+      如果不对，就调用get_new_username()让用户输入正确的用户名。
+
+import json
+
+def get_stored_username():
+    filename = 'username.json'
+    try:
+        with open(filename) as f_obj:
+            username = json.load(f_obj)
+    except FileNotFoundError:
+        return None
+    else:
+        return username
+
+def get_new_username():
+    username = input("What is your name? ")
+    filename = 'username.json'
+    with open(filename, 'w') as f_obj:
+        json.dump(username, f_obj)
+    return username
+
+def greet_user():
+    username = get_stored_username()
+    if username:
+        message = input("Are you " + username + "?(yes/no)")
+        if message == 'no':
+            username = get_new_username()
+        print("Welcome back," + username + "!")
+    else:
+        username = get_new_username()
+        print("We'll remember you when you come back, " + username + "!")
+
+greet_user()
