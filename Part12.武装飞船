@@ -1,0 +1,296 @@
+#创建Pygame窗口以及相应用户输入
+
+import sys
+
+import pygame
+
+def run_game():
+    #初始化游戏并创建一个屏幕对象
+    pygame.init()
+    screen = pygame.display.set_mode((1200,800))
+    pygame.display.set_caption("Alien Invasion")
+
+    #开始游戏的主循环
+    while True:
+
+        #监视键盘和鼠标事件
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+
+        #让最近绘制的屏幕可见
+        pygame.display.flip()
+
+run_game()
+
+pygame.event.get()  访问Pygame检测到的事件
+所有键盘和鼠标事件都将促使for循环运行
+pygame.display.flip()  命令Pygame让最近绘制的屏幕可见，它在每次执行while循环时都绘制一个空屏幕，并擦去旧屏幕，使得只有新屏幕可见
+
+
+#设置背景色
+
+import sys
+
+import pygame
+
+def run_game():
+    #初始化游戏并创建一个屏幕对象
+    pygame.init()
+    screen = pygame.display.set_mode((1200,800))
+    pygame.display.set_caption("Alien Invasion")
+
+    #设置背景色
+    bg_color = (230, 230, 230)
+
+    #开始游戏的主循环
+    while True:
+
+        #监视键盘和鼠标事件
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+
+        #每次循环时都重绘屏幕
+        screen.fill(bg_color)
+
+        #让最近绘制的屏幕可见
+        pygame.display.flip()
+
+run_game()
+
+screen.fill()用背景色填充屏幕，这个方法只接受一个实参，一种颜色
+
+#创建设置类
+
+settings.py
+
+class Settings():
+    #存储《外星人入侵》的所有设置的类
+
+    def __init__(self):     #初始化游戏的设置
+        #屏幕设置
+        self.screen_width = 1200
+        self.screen_height = 800
+        self.bg_color = (230, 230, 230)
+        
+
+pygame默认加载位图
+选择图像时要特别注意其背景色，请尽可能选择背景透明的图像，这样可以使用图像编辑器将其背景设置为任何颜色
+
+#创建Ship类
+
+import pygame
+
+class Ship():
+
+    def __init__(self,screen):
+        #初始化飞船并设置其初始位置
+        self.screen = screen
+
+        #加载飞船图像并获取其外接矩形
+        self.image = pygame.image.load('images/ship.bmp')
+        self.rect = self.image.get_rect()
+        self.screen_rect = screen.get_rect()
+
+        #将每艘新飞船放在屏幕底部中央
+        self.rect.centerx = self.screen_rect.centerx
+        self.rect.bottom = self.screen_rect.bottom
+
+    def blitme(self):
+        #在指定位置绘制飞船
+        self.screen.blit(self.image, self.rect)
+
+
+调用pygame.image.load()返回一个表示飞船的surface，并存储到self.image
+使用get_rect获取对应surface的属性rect
+要将游戏元素居中，可设置相应rect对象的属性center、centerx或centery
+要让游戏元素与屏幕边缘对其，可使用属性top、bottom、left或right
+要调整游戏元素的水平或垂直位置，可使用属性x和y，它们分别是相应矩形左上角的x和y坐标
+(0,0)位于屏幕左上角，向右下方运动时，坐标值增大
+
+#在屏幕上绘制飞船
+
+import sys
+
+import pygame
+
+from settings import Settings
+from ship import Ship
+
+def run_game():
+    #初始化pygame、设置和屏幕对象
+    pygame.init()
+    ai_settings = Settings()
+    screen = pygame.display.set_mode(
+        (ai_settings.screen_width, ai_settings.screen_height))
+    pygame.display.set_caption("Alien Invasion")
+
+    #创建一艘飞船
+    ship = Ship(screen)
+
+    #开始游戏的主循环
+    while True:
+
+        #监视键盘和鼠标事件
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+
+        #每次循环时都重绘屏幕
+        screen.fill(ai_settings.bg_color)
+        ship.blitme()
+        #让最近绘制的屏幕可见
+        pygame.display.flip()
+
+run_game()
+
+
+
+12-1 蓝色天空：创建一个背景为蓝色的Pygame窗口
+
+import sys
+
+import pygame
+
+def run_game():
+    #初始化游戏并创建一个屏幕对象
+    pygame.init()
+    screen = pygame.display.set_mode((1200,800))
+    pygame.display.set_caption("Blue")
+
+    #设置背景色
+    bg_color = (0, 0, 255)
+
+    #开始游戏的主循环
+    while True:
+
+        #监视键盘和鼠标事件
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+
+        #每次循环时都重绘屏幕
+        screen.fill(bg_color)
+
+        #让最近绘制的屏幕可见
+        pygame.display.flip()
+
+run_game()
+
+12-2 游戏角色：找一幅你喜欢的游戏角色位图图像或将一幅图像转换为位图。创建一个类，将该角色绘制到屏幕中央，并将该图像的背景色设置为屏幕背景色，
+     或将屏幕背景色设置为该图像的背景色
+     
+test.py
+
+import sys
+
+import pygame
+from model import Model
+
+def run_game():
+    #初始化游戏并创建一个屏幕对象
+    pygame.init()
+    screen = pygame.display.set_mode((1500,1200))
+    pygame.display.set_caption("Actor")
+
+    #设置背景色
+    bg_color = (230, 230, 230)
+    model = Model(screen)
+    #开始游戏的主循环
+    while True:
+
+        #监视键盘和鼠标事件
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+
+        #每次循环时都重绘屏幕
+        screen.fill(bg_color)
+        model.blitme()
+        #让最近绘制的屏幕可见
+        pygame.display.flip()
+
+run_game()
+
+
+model.py
+
+import pygame
+
+class Model():
+
+    def __init__(self,screen):
+        #初始化模型并设置其初始位置
+        self.screen = screen
+
+        #加载模型图像并获取其外接矩形
+        self.image = pygame.image.load('timg.bmp')
+        self.rect = self.image.get_rect()
+        self.screen_rect = screen.get_rect()
+
+        #将模型放在屏幕底部中央
+        self.rect.centerx = self.screen_rect.centerx
+
+
+    def blitme(self):
+        #在指定位置绘制模型
+        self.screen.blit(self.image, self.rect)
+        
+        
+
+#响应按键
+每当用户按键时，都将在Pygame中注册一个事件，事件都是通过方法pygame.event.get()获取的
+
+game_functions.py
+
+import sys
+
+import pygame
+
+def check_events(ship):
+    #响应按键和鼠标事件
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
+
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RIGHT:
+                #向右移动飞船
+                ship.rect.centerx +=1
+
+def update_screen(ai_settings, screen, ship):
+    #更新屏幕上的图像，并切换到新屏幕
+    #每次循环时都重绘屏幕
+    screen.fill(ai_settings.bg_color)
+    ship.blitme()
+    # 让最近绘制的屏幕可见
+    pygame.display.flip()
+    
+alien_invasion.py
+
+
+import pygame
+
+from settings import Settings
+from ship import Ship
+import game_functions as gf
+
+def run_game():
+    #初始化pygame、设置和屏幕对象
+    pygame.init()
+    ai_settings = Settings()
+    screen = pygame.display.set_mode(
+        (ai_settings.screen_width, ai_settings.screen_height))
+    pygame.display.set_caption("Alien Invasion")
+
+    #创建一艘飞船
+    ship = Ship(screen)
+
+    #开始游戏的主循环
+    while True:
+        gf.check_events(ship)
+        gf.update_screen(ai_settings, screen, ship)
+
+run_game()
+
