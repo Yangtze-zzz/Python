@@ -294,3 +294,137 @@ def run_game():
 
 run_game()
 
+
+12-3 火箭：编写一个游戏，开始时屏幕中央有一个火箭，而玩家可使用四个方向键上下左右移动火箭。请务必确保火箭不会移到屏幕外面。
+
+test_model.py
+
+import pygame
+
+class Model():
+
+    def __init__(self, screen):
+        #初始化模型并设置其初始位置
+        self.screen = screen
+
+        #加载模型图像并获取其外接矩形
+        self.image = pygame.image.load('rocket.bmp')
+        self.rect = self.image.get_rect()
+        self.screen_rect = screen.get_rect()
+
+        #将模型放在屏幕中央
+        self.rect.center = self.screen_rect.center
+        #移动标志
+        self.moving_right = False
+        self.moving_left = False
+        self.moving_up = False
+        self.moving_down = False
+
+    def update(self):
+        if self.moving_right and self.rect.right < self.screen_rect.right:
+            self.rect.centerx += 1
+        elif self.moving_left and self.rect.left > 0:
+            self.rect.centerx -= 1
+        elif self.moving_up and self.rect.top > 0:
+            self.rect.centery -= 1
+        elif self.moving_down and self.rect.bottom < self.screen_rect.bottom:
+            self.rect.centery += 1
+
+    def blitme(self):
+        #在指定位置绘制模型
+        self.screen.blit(self.image, self.rect)
+        
+        
+test_move.py
+
+import sys
+import pygame
+
+def check_events(rocket):
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
+
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RIGHT:
+                rocket.moving_right = True
+            elif event.key == pygame.K_LEFT:
+                rocket.moving_left = True
+            elif event.key == pygame.K_UP:
+                rocket.moving_up = True
+            elif event.key == pygame.K_DOWN:
+                rocket.moving_down = True
+
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_RIGHT:
+                rocket.moving_right = False
+            elif event.key == pygame.K_LEFT:
+                rocket.moving_left = False
+            elif event.key == pygame.K_UP:
+                rocket.moving_up = False
+            elif event.key == pygame.K_DOWN:
+                rocket.moving_down = False
+
+
+
+test.py
+
+import sys
+
+import pygame
+from test_model import Model
+import test_move as ts
+
+
+def run_game():
+    #初始化游戏并创建一个屏幕对象
+    pygame.init()
+    screen = pygame.display.set_mode((1500,1200))
+    pygame.display.set_caption("Actor")
+
+    #设置背景色
+    bg_color = (230, 230, 230)
+    rocket = Model(screen)
+    #开始游戏的主循环
+    while True:
+
+        ts.check_events(rocket)
+        rocket.update()
+        #每次循环时都重绘屏幕
+        screen.fill(bg_color)
+        rocket.blitme()
+        #让最近绘制的屏幕可见
+        pygame.display.flip()
+
+run_game()
+
+12-4 按键：创建一个程序，显示一个空屏幕。在事件循环中，每当检测到pygame.KEYDOWN事件时都打印属性event.key。运行这个程序，并按各种键，看看
+     Pygame如何响应
+     
+import sys
+import pygame
+
+
+def test():
+    pygame.init()
+    screen = pygame.display.set_mode((900,600))
+    pygame.display.set_caption("press")
+    bg_color = (255, 255, 255)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    bg_color = (255, 0, 255)
+                elif event.key == pygame.K_DOWN:
+                    bg_color = (0, 255, 255)
+                elif event.key == pygame.K_LEFT:
+                    bg_color = (255, 255, 0)
+                elif event.key == pygame.K_RIGHT:
+                    bg_color = (0, 0, 255)
+        screen.fill(bg_color)
+        pygame.display.flip()
+test()
+
+
