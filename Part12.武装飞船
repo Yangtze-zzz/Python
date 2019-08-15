@@ -428,3 +428,132 @@ def test():
 test()
 
 
+12-5 侧面射击：编写一个游戏，将一艘飞船放在屏幕左边，并允许玩家上下移动飞船。在玩家按空格键时，让飞船发射一颗在屏幕中向右穿行的子弹，
+     并在子弹离开屏幕而消失后将其删除
+
+game_functions.py
+
+import sys  
+  
+import pygame  
+from bullet import Bullets  
+def check_keydown_events(event,ai_setting,screen,rocket,bullets):  
+    if event.key == pygame.K_UP:  
+        rocket.moving_up = True  
+    elif event.key == pygame.K_DOWN:  
+        rocket.moving_down = True  
+    elif event.key == pygame.K_SPACE:  
+        new_bullet = Bullets(ai_setting,screen,rocket)  
+        bullets.add(new_bullet)  
+def check_keyup_events(event,rocket):  
+    if event.key == pygame.K_UP:  
+        rocket.moving_up = False  
+    elif event.key == pygame.K_DOWN:  
+        rocket.moving_down = False  
+def check_events(ai_settings,screen,rocket,bullets):  
+    """响应按键和鼠标事件"""  
+    for event in pygame.event.get():  
+        if event.type == pygame.QUIT:  
+            print("Quit")  
+            sys.exit()  
+        elif event.type == pygame.KEYDOWN:  
+            check_keydown_events(event,ai_settings,screen,rocket,bullets)  
+        elif event.type == pygame.KEYUP:  
+            check_keyup_events(event,rocket)  
+def update_bullet(bullets):  
+    for bullet in bullets:  
+        if bullet.rect_left<=0:  
+            bullets.remove(bullet)  
+def update_screen(ai_settings,screen,rocket,bullets):  
+    screen.fill(ai_settings.bg_color)  
+    for bullet in bullets.sprites():  
+        bullet.draw_bullet()  
+    rocket.blitme()  
+    pygame.display.flip()  
+    
+bullet.py
+
+import pygame
+from pygame.sprite import Sprite
+class Bullets(Sprite):
+    """docstring for Bullets"""
+    def __init__(self, ai_settings, screen, rocket):
+        super(Bullets, self).__init__()
+        self.screen = screen
+        self.rect = pygame.Rect(0, 0, ai_settings.bullet_width, ai_settings.bullet_height)
+        self.rect.centery = rocket.rect.centery
+        self.rect.right = rocket.rect.right
+        # 存储小数表示的子弹位置
+        self.x = float(self.rect.x)
+        self.color = ai_settings.bullet_color
+        self.speed_factor = ai_settings.bullet_speed_factor
+    def update(self):
+        self.x += self.speed_factor
+        self.rect.x = self.x
+    def draw_bullet(self):
+        pygame.draw.rect(self.screen, self.color, self.rect)
+        
+setting.py
+
+class Setting():  
+  
+    def __init__(self):  
+        """初始化游戏的设置"""  
+        #屏幕设置  
+        self.screen_width = 1200  
+        self.screen_height = 600  
+        self.bg_color = (255,255,255)  
+        self.ship_speed_factor = 1.5  
+  
+        self.bullet_speed_factor = 1  
+        self.bullet_width = 15  
+        self.bullet_height = 3  
+        self.bullet_color =(60,60,60)  
+        
+rocket.py
+
+import pygame
+class Rocket():
+    """docstring for Rocket"""
+    def __init__(self,ai_setting, screen):
+        self.screen = screen
+        self.image = pygame.image.load('images/rocket.bmp')
+        self.rect = self.image.get_rect()
+        self.screen_rect = screen.get_rect()
+        self.ai_setting = ai_setting
+        self.rect.x = 0
+        self.rect.centery = self.screen_rect.centery
+        self.center = float(self.rect.centerx)
+        self.centery = float(self.rect.centery)
+        self.moving_up = False
+        self.moving_down = False
+    def update(self):
+        if self.moving_up and self.rect.top > 0:
+            self.centery -= self.ai_setting.ship_speed_factor
+        if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
+            self.centery +=self.ai_setting.ship_speed_factor
+        self.rect.centery = self.centery
+    def blitme(self):
+        self.screen.blit(self.image,self.rect)
+        
+run.py
+
+import sys
+import pygame
+from rocket import Rocket
+from setting import Setting
+from pygame.sprite import Group
+import game_functions as gf
+def run():
+    pygame.init()
+    ai_setting = Setting()
+    screen =pygame.display.set_mode((ai_setting.screen_width,ai_setting.screen_height))
+    pygame.display.set_caption("Rocket")
+    r = Rocket(ai_setting,screen)
+    bullets = Group()
+    while True:
+        gf.check_events(ai_setting,screen,r,bullets)
+        r.update()
+        bullets.update()
+        gf.update_screen(ai_setting,screen,r,bullets)
+run()
