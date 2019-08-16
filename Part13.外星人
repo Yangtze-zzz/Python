@@ -1,0 +1,491 @@
+
+
+ 13-1 星星：找一幅星星图像，并在屏幕上显示一系列整齐排列的星星。
+ 
+ test.py
+ 
+ import sys
+import pygame
+from star_settings import Star
+from pygame.sprite import Group
+
+def screen():
+    pygame.init()
+    screen = pygame.display.set_mode((1200, 800))
+    bg_color = (255, 255, 255)
+    pygame.display.set_caption("Stars")
+    stars = Group()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+        create_star(stars, screen)
+        screen.fill(bg_color)
+        stars.draw(screen)
+        pygame.display.flip()
+
+def create_star(stars, screen):
+    star = Star(screen)
+    star_width = star.rect.width
+    available_x = 1200 - 2 * star_width
+    number_x = int(available_x / (2 * star_width))
+    star_height = star.rect.height
+    available_y = 800 - 2 * star_height
+    number_y = int(available_y / (2 * star_height))
+
+    for y in range(number_y):
+        for x in range(number_x):
+            st = Star(screen)
+            st.x = star_width + 2 * star_width * x
+            st.y = star_height + 2 * star_height * y
+            st.rect.x = st.x
+            st.rect.y = st.y
+            stars.add(st)
+
+screen()
+
+star_settings.py
+
+import pygame
+from pygame.sprite import Sprite
+
+
+class Star(Sprite):
+
+    def __init__(self, screen):
+        """初始化star并设置其起始位置"""
+        super(Star, self).__init__()
+        self.screen = screen
+
+        #加载star图像，并设置其rect属性
+        self.image = pygame.image.load('star.bmp')
+        self.rect = self.image.get_rect()
+
+        #每个star最初都在屏幕左上角附近
+        self.rect.x = self.rect.width
+        self.rect.y = self.rect.height
+
+        #存储外星人的准确位置
+        self.x = float(self.rect.x)
+
+    def blitme(self):
+        """在指定位置绘制star"""
+        self.screen.blit(self.image, self.rect)
+        
+
+13-2 更逼真的星星 ：为让星星的分布更逼真，可随机地放置星星。本书前面说过，可像下面这样来生成随机数：
+     from random import randint
+     random_number = randint(-10,10)
+     
+     
+test.py 
+
+from random import randint
+
+
+            st.x = star_width + 2 * star_width * x
+            st.y = star_height + 2 * star_height * y
+                        ↓
+            st.x = randint(-10, 10) + 2 * star_width * x
+            st.y = randint(-10, 10) + 2 * star_height * y
+            
+            
+            
+13-3 雨滴：寻找一幅雨滴图像，并创建一系列整齐排列的雨滴。让这些雨滴往下落，直到到达屏幕底端后消失。
+
+import sys
+import pygame
+from pygame.sprite import Group
+from pygame.sprite import Sprite
+
+
+class Settings():
+    def __init__(self):
+        self.screen_width = 1200
+        self.screen_height = 800
+        self.bg_color = (255, 255, 255)
+
+
+class Rain(Sprite):
+    def __init__(self, settings, screen):
+        super().__init__()
+        self.settings = settings
+        self.screen = screen
+        self.image = pygame.image.load('raindrop.bmp')
+        self.rect = self.image.get_rect()
+        self.drop_speed = 1
+
+    def update(self):
+        self.rect.y += self.drop_speed
+
+    def blitme(self):
+        self.screen.blit(self.image, self.rect)
+
+
+def get_number_rains_x(settings, rain_width):
+    available_space_x = settings.screen_width - rain_width * 2
+    number_rains_x = int(available_space_x / (rain_width * 2))
+    return number_rains_x
+
+
+def create_rain(settings, screen, rains, number_rain):
+    rain = Rain(settings, screen)
+    rain.rect.x = rain.rect.width + 2 * rain.rect.width * number_rain
+    rains.add(rain)
+
+
+def create_rain_group(settings, screen, rains):
+    rain = Rain(settings, screen)
+    number_rains_x = get_number_rains_x(settings, rain.rect.width)
+
+    for rain_number in range(number_rains_x):
+        create_rain(settings, screen, rains, rain_number)
+
+
+def update_rains(settings, rains):
+    """更新雨滴的位置，并删除已经消失的雨滴"""
+    # 更新雨滴的位置
+    rains.update()
+
+    # 删除已消失的雨滴
+    for rain in rains.copy():
+        if rain.rect.bottom >= settings.screen_height:
+            rains.remove(rain)
+
+
+def run_rain():
+    pygame.init()
+    settings = Settings()
+    screen = pygame.display.set_mode((settings.screen_width, settings.screen_height))
+    pygame.display.set_caption("It's Raining")
+    rains = Group()
+    create_rain_group(settings, screen, rains)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+
+        screen.fill(settings.bg_color)
+        rains.draw(screen)
+        update_rains(settings, rains)
+        pygame.display.flip()
+
+
+run_rain()
+
+13-4 连绵细雨：修改为完成练习13-3而编写的代码，使一行雨滴消失在屏幕底端后，屏幕顶端又出现一行新雨滴，并开始往下落。
+
+import sys
+import pygame
+from pygame.sprite import Group
+from pygame.sprite import Sprite
+ 
+ 
+class Settings():
+    def __init__(self):
+        self.screen_width = 1200
+        self.screen_height = 800
+        self.bg_color = (255, 255, 255)
+        self.get_new_rain = True
+ 
+ 
+class Rain(Sprite):
+    def __init__(self, settings, screen):
+        super().__init__()
+        self.settings = settings
+        self.screen = screen
+        self.image = pygame.image.load('raindrop.bmp')
+        self.rect = self.image.get_rect()
+        self.drop_speed = 1
+ 
+    def update(self):
+        self.rect.y += self.drop_speed
+ 
+    def blitme(self):
+        self.screen.blit(self.image, self.rect)
+ 
+ 
+def get_number_rains_x(settings, rain_width):
+    available_space_x = settings.screen_width - rain_width * 2
+    number_rains_x = int(available_space_x / (rain_width * 2))
+    return number_rains_x
+ 
+ 
+def create_rain(settings, screen, rains, number_rain):
+    rain = Rain(settings, screen)
+    rain.rect.x = rain.rect.width + 2 * rain.rect.width * number_rain
+    rains.add(rain)
+ 
+ 
+def create_rain_group(settings, screen, rains):
+    rain = Rain(settings, screen)
+    number_rains_x = get_number_rains_x(settings, rain.rect.width)
+    for rain_number in range(number_rains_x):
+        create_rain(settings, screen, rains, rain_number)
+ 
+ 
+def update_rains(settings, screen, rains):
+    """更新雨滴的位置，并删除已经消失的雨滴"""
+    # 更新雨滴的位置
+    rains.update()
+ 
+    # 删除已消失的雨滴,并添加新雨滴
+    for rain in rains:
+        if rain.rect.bottom >= settings.screen_height:
+            rains.remove(rain)
+ 
+    if rain.rect.bottom >= settings.screen_height:
+        create_rain_group(settings, screen, rains)
+ 
+ 
+def run_rain():
+    pygame.init()
+    settings = Settings()
+    screen = pygame.display.set_mode((settings.screen_width, settings.screen_height))
+    pygame.display.set_caption("It's Raining")
+    rains = Group()
+    create_rain_group(settings, screen, rains)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+ 
+        screen.fill(settings.bg_color)
+        update_rains(settings, screen, rains)
+        rains.draw(screen)
+        pygame.display.flip()
+ 
+ 
+run_rain()
+
+
+13-5 抓球：创建一个游戏，在屏幕底端放置一个玩家可左右移动的角色。让一个球出现在屏幕顶端，且水平位置是随机的，并让这个球以固定的速度往下落。
+     如果角色与球发生碰撞（表示将球抓住了），就让球消失。每当角色抓住球或球因抵达屏幕底端而消失后，都创建一个新球。
+     
+ball.py
+
+from pygame.sprite import Sprite
+from random import randint
+import pygame
+class Ball(Sprite):
+    """docstring for Ball"""
+    def __init__(self, screen):
+        super(Ball, self).__init__()
+        self.screen = screen
+        self.screen_rect = self.screen.get_rect()
+        self.image = pygame.image.load('images/ball.bmp')
+        self.rect = self.image.get_rect()
+
+        #设置位置
+        self.rect.x = randint(0,self.screen_rect.right-self.rect.width)
+        self.rect.y = 0
+
+        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
+
+        self.speed = 1
+
+    def blitme(self):
+        self.screen.blit(self.image,self.rect)
+        
+ human.py
+ 
+ import pygame
+from pygame.sprite import Sprite
+class Human(Sprite):
+    """docstring for Human"""
+    def __init__(self, screen):
+        super(Human, self).__init__()
+        self.screen = screen
+        self.image = pygame.image.load('images/human.bmp')
+        self.rect = self.image.get_rect()
+        self.screen_rect = screen.get_rect()
+        self.rect.centerx = self.screen_rect.centerx
+        self.rect.bottom = self.screen_rect.bottom
+
+        self.moving_left = False
+        self.moving_right =False
+    def update_human(self):
+        if self.moving_left and self.rect.x > 0:
+            self.rect.x -=1
+        if self.moving_right :
+            self.rect.x +=1
+    def bliteme(self):
+        self.screen.blit(self.image,self.rect)
+        
+        
+update_functions.py
+
+import pygame
+import sys
+from ball import Ball
+from human import Human
+class U_Functions():
+    """docstring for U_Functions"""
+    def __init__(self):
+        pass
+    def check_event(self,human):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    human.moving_left = True
+                elif event.key == pygame.K_RIGHT:
+                    human.moving_right = True
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    human.moving_left = False
+                elif event.key == pygame.K_RIGHT:
+                    human.moving_right = False
+    def create_ball(self,ball,screen):
+        if len(ball) ==0:
+            b = Ball(screen)
+            ball.add(b)
+        else:
+            pass
+
+    def update_ball(self,ball,screen,human):
+        for b in ball:
+            b.rect.y +=b.speed
+            if b.rect.y > b.screen_rect.bottom:
+                ball.remove(b)
+        collisions = pygame.sprite.groupcollide(ball,human,True,False)
+
+    def update_screen(self,screen,human,bg_color,ball):
+        screen.fill(bg_color)
+        if len(human) == 0:
+            human.add(Human(screen))
+        for h in human:
+            self.check_event(h)
+            h.update_human()
+        human.draw(screen)
+        self.create_ball(ball,screen)
+        self.update_ball(ball,screen,human)
+        ball.draw(screen)
+        pygame.display.flip()
+        
+play.py
+
+import pygame
+import sys
+from human import Human
+from update_fuction import U_Functions
+from ball import Ball
+from pygame.sprite import Group
+def run():
+    pygame.init()
+    screen = pygame.display.set_mode((800,600))
+    pygame.display.set_caption("catch ball")
+    bg_color =(255,255,255)
+    human = Human(screen)
+    function = U_Functions()
+    b = Group()
+    human = Group()
+    while True:
+        function.update_screen(screen,human,bg_color,b)
+
+run()
+
+
+13-6 游戏结束：在为完成练习13-5而编写的代码中，跟踪玩家有多少次未将球接着。在未接着球的次数到达三次后，结束游戏。 
+
+ball.py 和 human.py 同上
+
+game_status.py
+
+class GameStatus(object):
+    """docstring for GameStatus"""
+    def __init__(self):
+        self.game_active = True
+        self.total = 0
+        self.catched = 0
+        self.loss = 0
+    def check_active(self):
+        if self.loss == 3:
+            self.game_active = False
+
+
+update_function.py
+
+import pygame
+import sys
+from ball import Ball
+from human import Human
+from time import sleep
+class U_Functions():
+    """docstring for U_Functions"""
+    def __init__(self):
+        pass
+    def check_event(self,human):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    human.moving_left = True
+                elif event.key == pygame.K_RIGHT:
+                    human.moving_right = True
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    human.moving_left = False
+                elif event.key == pygame.K_RIGHT:
+                    human.moving_right = False
+    def create_ball(self,ball,screen):
+        if len(ball) ==0:
+            b = Ball(screen)
+            ball.add(b)
+        else:
+            pass
+
+    def update_ball(self,ball,screen,human,game_status):
+        for b in ball:
+            b.rect.y +=b.speed
+            if b.rect.y > b.screen_rect.bottom:
+                ball.remove(b)
+                game_status.loss +=1
+        if pygame.sprite.groupcollide(ball,human,True,False):
+            sleep(0.5)
+
+    def update_screen(self,screen,human,bg_color,ball,game_status):
+        screen.fill(bg_color)
+        if len(human) == 0:
+            human.add(Human(screen))
+        for h in human:
+            self.check_event(h)
+            h.update_human()
+        human.draw(screen)
+        self.create_ball(ball,screen)
+        self.update_ball(ball,screen,human,game_status)
+        ball.draw(screen)
+        pygame.display.flip()
+    
+    
+play_game.py
+
+import pygame
+import sys
+from human import Human
+from update_fuction import U_Functions
+from ball import Ball
+from pygame.sprite import Group
+from game_status  import GameStatus
+def run():
+    pygame.init()
+    screen = pygame.display.set_mode((800,600))
+    pygame.display.set_caption("catch ball")
+    bg_color =(255,255,255)
+    human = Human(screen)
+    function = U_Functions()
+    b = Group()
+    human = Group()
+    game_status = GameStatus()
+    while True:
+        game_status.check_active()
+        if game_status.game_active:
+            function.update_screen(screen,human,bg_color,b,game_status)
+        else:
+            sys.exit()
+
+run()
