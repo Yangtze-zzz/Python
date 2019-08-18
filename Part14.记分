@@ -434,7 +434,8 @@ run_game()
 
 
 
-14-4
+14-4 历史最高分：每当玩家关闭并重新开始游戏《外星人入侵》时，最高分都将被重置。请修复这个问题，调用sys.exit()前将最高分写入文件，并当在
+     GameStats中初始化最高分时从文件中读取它
 
 #alien.py
 import pygame
@@ -1012,8 +1013,10 @@ class Ship(Sprite):
 
 
 
-14-5
-
+14-5 重构：找出执行了多项任务的函数和方法，对它们进行重构，以让代码高效而有序。例如，对于check_bullet_alien_collisions()，将其中外星人群被
+     消灭干净时开始新等级的代码移到一个名为start_new_level()的函数中；又比如，对于Scoreboard的方法__init__()，将其中调用四个不同方法的代码
+     移到一个名为prep_images()的方法中，以缩短方法__init__()。如果你重构了check_play_button(),方法prep_images()也可以为check_play_button()
+     或start_game()提供帮助
 
 #game_fuction
 def start_new_level(bullets,aliens,ai_settings,stats,sb,screen,ship):
