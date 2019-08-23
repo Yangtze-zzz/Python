@@ -57,3 +57,71 @@ plt.xlabel('', fontsize=16)
 plt.ylabel("Temperature(F)", fontsize=16)
 plt.tick_params(axis='both', which='major', labelsize=16)
 plt.show()
+
+
+
+#模块datetime
+from datetime import datetime
+first_date = datetime.strptime('2014-7-1', '%Y-%m-%d')
+print(first_date)               #2014-07-01 00:00:00
+
+
+模块datetime中设置日期和时间格式的实参
+
+实参                 含义
+%A              星期的名称，如Monday
+%B              月份名，如January
+%m              用数字表示的月份(01-12)
+%d              用数字表示月份中的一天(01-31)
+%Y              四位的年份，如2015
+%y              两位的年份，如15
+%H              24小时制的小时数(00~23)
+%I              12小时制的小时数(01~12)
+%p              am或pm
+%m              分钟数(00~59)
+%S              秒数(00~61)
+
+
+#给图表添加日期
+
+import csv
+from datetime import datetime
+
+from matplotlib import pyplot as plt
+
+#从文件中获取日期、最高气温和最低气温
+filename = 'sitka_weather_2014.csv'
+with open(filename) as f:
+    reader = csv.reader(f)
+    header_row = next(reader)
+
+    dates, highs, lows = [], [], []
+    for row in reader:
+        current_date = datetime.strptime(row[0], "%Y-%m-%d")
+        dates.append(current_date)
+
+        high = int(row[1])
+        highs.append(high)
+
+        low = int(row[3])
+        lows.append(low)
+
+#根据数据绘制图形
+fig = plt.figure(dpi=128, figsize=(10, 6))
+plt.plot(dates, highs, c='red', alpha=0.5)
+plt.plot(dates, lows, c='blue', alpha=0.5)
+#绘图表区域着色
+plt.fill_between(dates, highs, lows, facecolor='blue', alpha=0.1)
+
+#设置图形的格式
+plt.title("Daily high and low temperatures - 2014", fontsize=24)
+plt.xlabel('', fontsize=16)
+fig.autofmt_xdate()
+plt.ylabel("Temperature(F)", fontsize=16)
+plt.tick_params(axis='both', which='major', labelsize=16)
+plt.show()
+
+
+
+#错误检查
+
