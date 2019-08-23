@@ -1,0 +1,485 @@
+#简单折线图
+import matplotlib.pyplot as plt
+
+input_values = [1, 2, 3, 4, 5]
+squares = [1, 4, 9, 16, 25]
+plt.plot(input_values, squares, linewidth=5)
+
+#设置图表标题，并给坐标轴加上标签
+plt.title("Square Number", fontsize=24)
+plt.xlabel("Value", fontsize=14)
+plt.ylabel("Square of Value", fontsize=14)
+
+#设置刻度标记的大小
+plt.tick_params(axis='both', labelsize=14)
+
+plt.plot(squares)
+plt.show()
+
+
+#散点图
+import matplotlib.pyplot as plt
+
+x_values = [1, 2, 3, 4, 5]
+y_values = [1, 4, 9, 16, 25]
+
+plt.scatter(x_values, y_values, s=100)        #实参s设置点的尺寸
+
+#设置图标标题并给坐标轴加上标签
+plt.title("Square Numbers", fontsize=24)
+plt.xlabel("Value", fontsize=14)
+plt.ylabel("Square of Value", fontsize=14)
+
+plt.show()
+
+-----------------------------------------------------------------------
+
+import matplotlib.pyplot as plt
+
+x_values = list(range(1,1001))
+y_values = [x**2 for x in x_values]
+
+plt.scatter(x_values, y_values, c=y_values, cmap=plt.cm.Blues,  edgecolors='none', s=40)    #实参s设置点的尺寸
+                                                                     #edgecolors='none' 删除数据点轮廓
+                                                                     #c='red' 表示数据点的颜色
+                                                                     #c=(0, 0, 0.8) 分别表示红黄蓝的分量，值越接近0，指定的颜色越深
+                                                                     #c=y_values, cmap=plt.cm.Blues 颜色映射，较小的点为浅蓝色，较深的点为深蓝色
+#设置图标标题并给坐标轴加上标签
+plt.title("Square Numbers", fontsize=24)
+plt.xlabel("Value", fontsize=14)
+plt.ylabel("Square of Value", fontsize=14)
+
+#设置每个坐标轴的取值范围
+plt.axis([0, 1100, 0, 1100000])
+
+plt.show()
+
+
+#自动保存图表
+将plt.show()替换为plt.savefig()
+plt.savefig('squares_plot.png', bbox_inches='tight')
+#前一个实参表示以什么样的文件名保存图表，第二个表示将图表多余的空白区域裁减掉
+
+
+
+15-1 立方：数字的三次方被称为其立方。请绘制一个图形，显示前5个整数的立方值，再绘制一个图形，显示前5000个整数的立方值。
+import matplotlib.pyplot as plt
+
+x_value = list(range(1, 6))
+y_value = [x**3 for x in x_value]
+
+
+plt.scatter(x_value, y_value, s=40)
+plt.title("test", fontsize=24)
+plt.xlabel("Value", fontsize=14)
+plt.ylabel("result", fontsize=14)
+
+plt.show()
+
+
+15-2 彩色立方：给你前面绘制的立方图指定颜色映射
+
+import matplotlib.pyplot as plt
+
+x_value = list(range(1, 5001))
+y_value = [x**3 for x in x_value]
+
+
+plt.scatter(x_value, y_value, c=y_value, cmap=plt.cm.Blues , s=40)
+plt.title("test", fontsize=24)
+plt.xlabel("Value", fontsize=14)
+plt.ylabel("result", fontsize=14)
+
+plt.show()
+
+
+
+
+#随机漫步
+
+from random import choice
+import matplotlib.pyplot as plt
+#from random_walk import RandomWalk
+class RandomWalk():
+    """一个生成随机漫步数据的类"""
+
+    def __init__(self,num_points=5000):
+        """初始化随机漫步的属性"""
+        self.num_points = num_points
+
+        #所有随机漫步都始于(0, 0)
+        self.x_values = [0]
+        self.y_values = [0]
+
+    def fill_walk(self):
+        """计算随机漫步包含的所有点"""
+
+        #不断漫步，直到列表达到指定的长度
+        while len(self.x_values) < self.num_points:
+            #决定前进方向以及沿着这个方向前进的距离
+            x_direction = choice([1, -1])           #1表示向右走  -1表示向左走
+            x_distance = choice([0, 1, 2, 3, 4])
+            x_step = x_direction * x_distance
+
+            y_direction = choice([1, -1])
+            y_distance = choice([0, 1, 2, 3, 4])
+            y_step = y_direction * y_distance
+
+            #拒绝原地踏步
+            if x_step == 0 and y_step == 0:
+                continue
+
+            #计算下一个点的x和y的值
+            next_x = self.x_values[-1] + x_step
+            next_y = self.y_values[-1] + y_step
+
+            self.x_values.append(next_x)
+            self.y_values.append(next_y)
+
+
+#创建一个RandomWalk实例，并将其包含的点逗绘制出来
+rw = RandomWalk()
+rw.fill_walk()
+plt.scatter(rw.x_values, rw.y_values, s=15)
+plt.show()
+
+--------------------------------------------------------------
+
+#根据点的先后顺序着色
+while True:
+    #创建一个RandomWalk实例，并将其包含的点逗绘制出来
+    rw = RandomWalk()
+    rw.fill_walk()
+    point_numbers = list(range(rw.num_points))
+    plt.scatter(rw.x_values, rw.y_values, c=point_numbers, cmap=plt.cm.Blues, edgecolors='none', s=15)
+    plt.show()
+
+    keep_running = input("Make another walk?(y/n):")
+    if keep_running == 'n':
+        break
+        
+        
+        
+        
+        
+        
+15-3 分子运动：修改rw_visual.py，将其中的plt.scatter()替换为plt.plot()。为模拟花粉在水滴表面的运动路径，向plt.plot()传递rw.x_values和
+     rw.y_values，并指定实参值linewidth。使用5000个点而不是50000点。
+     
+from random import choice
+import matplotlib.pyplot as plt
+
+class RandomWalk():
+    """一个生成随机漫步数据的类"""
+
+    def __init__(self,num_points=5000):
+        """初始化随机漫步的属性"""
+        self.num_points = num_points
+
+        #所有随机漫步都始于(0, 0)
+        self.x_values = [0]
+        self.y_values = [0]
+
+    def fill_walk(self):
+        """计算随机漫步包含的所有点"""
+
+        #不断漫步，直到列表达到指定的长度
+        while len(self.x_values) < self.num_points:
+            #决定前进方向以及沿着这个方向前进的距离
+            x_direction = choice([1, -1])           #1表示向右走  -1表示向左走
+            x_distance = choice([0, 1, 2, 3, 4])
+            x_step = x_direction * x_distance
+
+            y_direction = choice([1, -1])
+            y_distance = choice([0, 1, 2, 3, 4])
+            y_step = y_direction * y_distance
+
+            #拒绝原地踏步
+            if x_step == 0 and y_step == 0:
+                continue
+
+            #计算下一个点的x和y的值
+            next_x = self.x_values[-1] + x_step
+            next_y = self.y_values[-1] + y_step
+
+            self.x_values.append(next_x)
+            self.y_values.append(next_y)
+
+while True:
+    #创建一个RandomWalk实例，并将其包含的点逗绘制出来
+    rw = RandomWalk(5000)
+    rw.fill_walk()
+
+    #设置绘图窗口的尺寸
+    plt.figure(dpi=128, figsize=(10, 6))
+    point_numbers = list(range(rw.num_points))
+
+    plt.plot(rw.x_values, rw.y_values, linewidth=5)
+
+    #隐藏坐标轴
+    plt.axes().get_xaxis().set_visible(False)
+    plt.axes().get_yaxis().set_visible(False)
+    plt.show()
+
+    keep_running = input("Make another walk?(y/n):")
+    if keep_running == 'n':
+        break
+
+     
+15-4 改进的随机漫步：在类RandomWalk中，x_step和y_step是根据相同的条件生成的：从列表[1,-1]中随机地选择方向，并从列表[0,1,2,3,4]中随机地
+     选择距离。请修改这些列表中的值，看看对随机漫步路径有何影响。尝试使用更长的距离选择列表，如0~8；或者将-1从x或y方向列表中删除。
+     
+     from random import choice
+import matplotlib.pyplot as plt
+
+class RandomWalk():
+    """一个生成随机漫步数据的类"""
+
+    def __init__(self,num_points=5000):
+        """初始化随机漫步的属性"""
+        self.num_points = num_points
+
+        #所有随机漫步都始于(0, 0)
+        self.x_values = [0]
+        self.y_values = [0]
+
+    def fill_walk(self):
+        """计算随机漫步包含的所有点"""
+
+        #不断漫步，直到列表达到指定的长度
+        while len(self.x_values) < self.num_points:
+            #决定前进方向以及沿着这个方向前进的距离
+            x_direction = choice([1])           #1表示向右走  -1表示向左走
+            x_distance = choice([0, 1, 2, 3, 4, 5, 6, 7, 8])
+            x_step = x_direction * x_distance
+
+            y_direction = choice([1])
+            y_distance = choice([0, 1, 2, 3, 4, 5, 6, 7, 8])
+            y_step = y_direction * y_distance
+
+            #拒绝原地踏步
+            if x_step == 0 and y_step == 0:
+                continue
+
+            #计算下一个点的x和y的值
+            next_x = self.x_values[-1] + x_step
+            next_y = self.y_values[-1] + y_step
+
+            self.x_values.append(next_x)
+            self.y_values.append(next_y)
+
+while True:
+    #创建一个RandomWalk实例，并将其包含的点逗绘制出来
+    rw = RandomWalk(5000)
+    rw.fill_walk()
+
+    #设置绘图窗口的尺寸
+    plt.figure(dpi=128, figsize=(10, 6))
+    point_numbers = list(range(rw.num_points))
+
+    plt.plot(rw.x_values, rw.y_values, linewidth=5)
+
+    #隐藏坐标轴
+    plt.axes().get_xaxis().set_visible(False)
+    plt.axes().get_yaxis().set_visible(False)
+    plt.show()
+
+    keep_running = input("Make another walk?(y/n):")
+    if keep_running == 'n':
+        break
+
+
+
+15-5 重构：方法fill_walk()很长，请新建一个名为get_step()的方法，用于确定每次漫步的距离和方向，并计算这次漫步将如何移动，然后在fill_walk()
+     中调用get_step()两次:
+     x_step = self.get_step()
+     y_step = self.get_step()
+
+from random import choice
+import matplotlib.pyplot as plt
+
+class RandomWalk():
+    """一个生成随机漫步数据的类"""
+
+    def __init__(self, num_points=5000):
+        """初始化随机漫步的属性"""
+        self.num_points = num_points
+
+        #所有随机漫步都始于(0, 0)
+        self.x_values = [0]
+        self.y_values = [0]
+
+    def fill_walk(self):
+        """计算随机漫步包含的所有点"""
+
+        #不断漫步，直到列表达到指定的长度
+        while len(self.x_values) < self.num_points:
+            #决定前进方向以及沿着这个方向前进的距离
+            x_step = self.get_step()
+            y_step = self.get_step()
+
+            #拒绝原地踏步
+            if x_step == 0 and y_step == 0:
+                continue
+
+            #计算下一个点的x和y的值
+            next_x = self.x_values[-1] + x_step
+            next_y = self.y_values[-1] + y_step
+
+            self.x_values.append(next_x)
+            self.y_values.append(next_y)
+
+
+    def get_step(self):
+        direction = choice([1, -1])
+        distance = choice([0, 1, 2, 3, 4])
+        step = direction * distance
+        return step
+
+
+while True:
+    #创建一个RandomWalk实例，并将其包含的点逗绘制出来
+    rw = RandomWalk(5000)
+    rw.fill_walk()
+
+    #设置绘图窗口的尺寸
+    plt.figure(dpi=128, figsize=(10, 6))
+    point_numbers = list(range(rw.num_points))
+
+    plt.plot(rw.x_values, rw.y_values, linewidth=5)
+
+    #隐藏坐标轴
+    plt.axes().get_xaxis().set_visible(False)
+    plt.axes().get_yaxis().set_visible(False)
+    plt.show()
+
+    keep_running = input("Make another walk?(y/n):")
+    if keep_running == 'n':
+        break
+
+
+#Pygal画廊
+
+from random import randint
+
+class Die():
+    """表示一个骰子的类"""
+
+    def __init__(self, num_sides=6):
+        """骰子默认为6面"""
+        self.num_sides = num_sides
+
+    def roll(self):
+        """返回一个位于1和骰子面数之间的随机值"""
+        return randint(1, self.num_sides)
+
+#创建一个D6
+die = Die()
+
+#掷几次骰子，并将结果存储在一个列表中
+results = []
+for roll_num in range(1000):
+    result = die.roll()
+    results.append(result)
+
+#分析结果
+frequencies = []
+for value in range(1, die.num_sides+1):
+    frequency = results.count(value)
+    frequencies.append(frequency)
+
+print(frequencies)
+     
+     
+#绘制直方图
+
+#对结果进行可视化
+hist = pygal.Bar()
+
+hist.title = "Results of rolling one D6 1000 times."
+hist.x_labels = ['1', '2', '3', '4', '5', '6']
+hist.x_title = "Result"
+hist.y_title = "Frequency of Result"
+
+hist.add('D6', frequencies)
+hist.render_to_file('die_visual.svg')
+
+
+
+15-8 同时掷三个骰子：如果你同时掷三个D6骰子，可能得到的最小点数为3，而最大点数为18。请通过可视化展示同时掷三个D6骰子的结果。
+
+from random import randint
+import pygal
+
+class Die():
+    """表示一个骰子的类"""
+
+    def __init__(self, num_sides=6):
+        """骰子默认为6面"""
+        self.num_sides = num_sides
+
+    def roll(self):
+        """返回一个位于1和骰子面数之间的随机值"""
+        return randint(1, self.num_sides)
+
+
+die1 = Die(8)
+die2 = Die(8)
+die3 = Die(8)
+results = []
+for roll_num in range(5000):
+    result = die1.roll()+die2.roll()+die3.roll()
+    results.append(result)
+
+frequencies = []
+max_result = die1.num_sides + die2.num_sides + die3.num_sides
+for value in range(3, max_result):
+    frequency = results.count(value)
+    frequencies.append(frequency)
+
+hist = pygal.Bar()
+hist.title = "Results of rolling two D6 1000 times."
+hist.x_labels = range(3, max_result+1)
+hist.y_title = 'frequency of result'
+
+hist.add('D6', frequencies)
+hist.render_to_file('die_visual2.svg')
+
+
+15-9 将点数相乘：同时掷两个骰子时，通常将它们的点数相加。请通过可视化展示将两个骰子的点数相乘的结果。
+
+from random import randint
+import pygal
+
+class Die():
+    """表示一个骰子的类"""
+
+    def __init__(self, num_sides=6):
+        """骰子默认为6面"""
+        self.num_sides = num_sides
+
+    def roll(self):
+        """返回一个位于1和骰子面数之间的随机值"""
+        return randint(1, self.num_sides)
+
+
+die1 = Die()
+die2 = Die()
+
+results = [die1.roll() * die2.roll() for roll_num in range(50000)]
+
+#分析结果
+max_result = die1.num_sides * die2.num_sides
+frequencies = [results.count(value) for value in range(1, max_result+1)]
+
+#对结果进行可视化
+hist = pygal.Bar()
+hist.title = "Results of rolling three D6 50000 times."
+hist.x_labels = list(range(1, 37))
+hist.x_title = "Result"
+hist._y_title = "Frequencies of Result"
+
+hist.add('D6*D6', frequencies)
+hist.render_to_file('m_visual.svg')
+
+
