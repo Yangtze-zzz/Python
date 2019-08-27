@@ -125,3 +125,182 @@ plt.show()
 
 #错误检查
 
+import csv
+from datetime import datetime
+
+from matplotlib import pyplot as plt
+
+#从文件中获取日期、最高气温和最低气温
+filename = 'death_valley_2014.csv'
+with open(filename) as f:
+    reader = csv.reader(f)
+    header_row = next(reader)
+
+    dates, highs, lows = [], [], []
+    for row in reader:
+        try:
+            current_date = datetime.strptime(row[0], "%Y-%m-%d")
+            high = int(row[1])
+            low = int(row[3])
+        except ValueError:
+            print(current_date, 'missing data')
+        else:
+            dates.append(current_date)
+            highs.append(high)
+            lows.append(low)
+
+
+#根据数据绘制图形
+fig = plt.figure(dpi=128, figsize=(10, 6))
+plt.plot(dates, highs, c='red', alpha=0.5)
+plt.plot(dates, lows, c='blue', alpha=0.5)
+#绘图表区域着色
+plt.fill_between(dates, highs, lows, facecolor='blue', alpha=0.1)
+
+#设置图形的格式
+plt.title("Daily high and low temperatures - 2014\nDeath Valley, CA", fontsize=20)
+plt.xlabel('', fontsize=16)
+fig.autofmt_xdate()
+plt.ylabel("Temperature(F)", fontsize=16)
+plt.tick_params(axis='both', which='major', labelsize=16)
+plt.show()
+
+16-2 比较锡特卡和死亡谷的气温：在有关锡特卡和死亡谷的图表中，气温刻度反映了数据范围的不同。为准确地比较锡特卡和死亡谷的气温范围，需要在y轴上
+     使用相同的刻度。为此，请修改16-5图和图16-6所示图表的y轴设置，对锡特卡和死亡谷的气温范围进行直接比较(你也可以对任何两个地方的气温范围进
+     行比较)。你还可以尝试在一个图表中呈现这两个数据集
+     
+import csv
+from datetime import datetime
+
+from matplotlib import pyplot as plt
+
+def get_weather_data(filename, dates, highs, lows):
+    """Get the highs and lows from a data file."""
+    with open(filename) as f:
+        reader = csv.reader(f)
+        header_row = next(reader)
+
+        # dates, highs, lows = [], [], []
+        for row in reader:
+            try:
+                current_date = datetime.strptime(row[0], "%Y-%m-%d")
+                high = int(row[1])
+                low = int(row[3])
+            except ValueError:
+                print(current_date, 'missing data')
+            else:
+                dates.append(current_date)
+                highs.append(high)
+                lows.append(low)
+
+# Get weather data for Sitka.
+dates, highs, lows = [], [], []
+get_weather_data('sitka_weather_2014.csv', dates, highs, lows)
+
+# Plot Sitka weather data.
+fig = plt.figure(dpi=128, figsize=(10, 6))
+plt.plot(dates, highs, c='red', alpha=0.6)
+plt.plot(dates, lows, c='blue', alpha=0.6)
+plt.fill_between(dates, highs, lows, facecolor='blue', alpha=0.15)
+
+# Get Death Valley data.
+dates, highs, lows = [], [], []
+get_weather_data('death_valley_2014.csv', dates, highs, lows)
+
+# Add Death Valley data to current plot.
+plt.plot(dates, highs, c='red', alpha=0.3)
+plt.plot(dates, lows, c='blue', alpha=0.3)
+plt.fill_between(dates, highs, lows, facecolor='blue', alpha=0.05)
+
+# Format plot.
+title = "Daily high and low temperatures - 2014"
+title += "\nSitka, AK and Death Valley, CA"
+plt.title(title, fontsize=20)
+plt.xlabel('', fontsize=16)
+fig.autofmt_xdate()
+plt.ylabel("Temperature (F)", fontsize=16)
+plt.tick_params(axis='both', which='major', labelsize=16)
+plt.ylim(10, 120)
+
+plt.show()
+
+
+制作交易收盘价走势图：JSON格式
+
+from __future__ import (absolute_import, division, print_function, unicode_literals)
+
+from urllib.request import urlopen
+import json
+
+json_url = 'https://raw.githubusercontent.com/muxuezi/btc/master/btc_close_2017.json'
+response = urlopen(json_url)
+#读取数据
+req = response.read()
+#将数据写入文件
+with open('btc_close_2017_urllib.json', 'wb') as f:
+    f.write(req)
+#加载json格式
+file_urllib = json.loads(req)
+print(file_urllib)
+
+
+import requests
+
+json_url = 'https://raw.githubusercontent.com/muxuezi/btc/master/btc_close_2017.json'
+req = requests.get(json_url)
+#将数据写入文件
+with open('btc_close_2017_request.json', 'w') as f:
+    f.write(req.text)           #req.text属性可以直接读取文件数据，返回格式是字符串
+file_requests = req.json()
+
+
+
+#提取相关数据
+import json
+
+#将数据加载到一个列表中
+filename = 'btc_close_2017.json'
+with open(filename) as f:
+    btc_data = json.load(f)
+#打印每一天的信息
+for btc_dict in btc_data:
+    date = btc_dict['date']
+    month = btc_dict['month']
+    week = btc_dict['week']
+    weekday = btc_dict['weekday']
+    close = btc_dict['close']
+    print("{} is month {} week {},{}, the close price is {} RMB".format(date, month, week, weekday, close))
+    
+    
+
+#绘制收盘价折线图
+import json
+import pygal
+
+#将数据加载到一个列表中
+filename = 'btc_close_2017.json'
+with open(filename) as f:
+    btc_data = json.load(f)
+
+# 创建5个列表，分别存储日期和收盘价
+dates = []
+months = []
+weeks = []
+weekdays = []
+close = []
+# 每一天的信息
+for btc_dict in btc_data:
+    dates.append(btc_dict['date'])
+    months.append(int(btc_dict['month']))
+    weeks.append(int(btc_dict['week']))
+    weekdays.append(btc_dict['weekday'])
+    close.append(int(float(btc_dict['close'])))
+
+line_chart = pygal.Line(x_label_rotation=20, show_minor_x_labels=False)
+line_chart.title = '收盘价（¥）'
+line_chart.x_labels = dates
+N = 20  # x轴坐标每隔20天显示一次
+line_chart.x_labels_major = dates[::N]
+line_chart.add('收盘价', close)
+line_chart.render_to_file('收盘价折线图（¥）.svg')
+
