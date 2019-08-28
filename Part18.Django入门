@@ -1,0 +1,130 @@
+#激活虚拟环境
+在虚拟环境的目录下输入Scripts\activate
+
+#停止使用虚拟环境
+deactivate
+
+
+#在Django中创建项目(虚拟环境下)
+django-admin.py startproject learning_log .
+dir              查看目录
+dir learning_log 查看当前文件夹
+
+#创建数据库
+python manage.py migrate
+
+#查看项目
+python manage.py runserver
+
+http://localhost:8000/
+http://127.0.0.1:8000/
+
+
+#创建应用程序
+python manage.py startapp learning_logs
+
+#定义模型
+models.py
+
+from django.db import models
+
+# Create your models here.
+class Topic(models.Model):
+    """用户学习的主题"""
+    text = models.CharField(max_length=200)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        """返回模型的字符串表示"""
+        return self.text
+        
+
+#激活模型
+setting.py
+
+--snip--
+'django.contrib.staticfiles',
+
+#My apps
+'learning_logs'
+
+修改数据库
+python manage.py makemigrations learning_logs
+迁移数据库
+python manage.py migrate
+
+每当需要修改“学习笔记”管理的数据时，都采取如下三个步骤，修改models.py;对learnning_logs调用makemigrations;让Django迁移项目
+
+
+#创建超级用户
+python manage.py createsuperuser
+
+#向管理网站注册模型
+admin.py
+
+from django.contrib import admin
+
+# Register your models here.
+from learning_logs.models import Topic
+
+admin.site.register(Topic)
+
+
+#定义模型Entry
+
+class Topic(models.Model):
+--snip--
+
+class Entry(models, Model):
+    """学到的有关某个主题的具体知识"""
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    text = models.TextField()
+    date_added = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name_plural = 'entries'
+        
+    def __str__(self):
+        """返回模型的字符串表示"""
+        return self.text[:50] + "..."
+        
+#迁移模型Entry
+python manage.py makemigrations learning_logs
+
+python manage.py migrate
+
+#向管理网站注册Entry
+admin.py
+
+from learning_logs.models import Topic, Entry
+
+admin.site.register(Entry)
+
+单击Entries 的ADD链接 选择主题创建条目
+
+#Django Shell
+python manage.py shell
+from learning_logs.models import Topic
+Topic.objects.all()       #<QuerySet [<Topic: Chess>, <Topic: Rock Climbing>]>
+
+遍历查询集
+>>> topics = Topic.objects.all()
+>>> for topic in topics:
+...     print(topic.id, topic)
+...
+
+
+
+>>> t = Topic.objects.get(id=1)
+>>> t.text
+'Chess'
+>>> t.date_added
+datetime.datetime(2019, 8, 28, 1, 2, 31, 715267, tzinfo=<UTC>)
+>>>
+>>> t.entry_set.all()
+<QuerySet [<Entry: 国际象棋的第一个阶段是开局，大致是前10步左右。在开局阶段，最好做三件事情：将象和马调出来；努力控制...>]>
+
+#退出Shell
+Ctrl+Z 再按回车
+
+
