@@ -1,0 +1,119 @@
+import pandas
+
+food_info = pandas.read_csv("food_info.csv")
+
+type(food_info)	DataFrame数据流 ，pandas自己的格式
+food_info.dtypes	数据的类型
+
+food_info.head(3)	可以去看前三行，没有传入数值是5行
+
+food_info.tail(4)	尾4行
+
+food._info.columns	各个列名字
+food_info.shape       查看几行几列
+
+food_info.loc[0]	第0列数据
+
+a = food_info["NDB_No"]	查看该列的数据
+
+col_names = food_info.columns.tolist()
+gram_df = []
+再通过循环取出带有(g)的数据
+
+b = food_info["Iron_(mg)"] / 1000	所有的值都乘除加减
+
+.max()最大值
+
+food.sort_values("Sodium_(mg)", inplace= True)	以哪个标准（列）排序，是否进行新生成进行替换
+print(food["Sodium_(mg)"])
+food.sort_values("Sodium_(mg)", inplace= True, ascending= False)	降序排列
+
+
+import pandas as pd
+import numpy as np
+
+titanic = pd.read_csv("xxxx")
+titanic.head()
+
+
+age = titanic["Age"]
+age_is_null = pd.isnull(age )		判断是否缺失值，返回True或False
+
+age_null_true = age[age_is_null]	把所有的缺失值都保留下来
+age_null_count = len(age_null_true )	计算缺失的个数
+
+
+有缺失值的时候不能求平均值，
+
+correct_mean_age = titanic["Age"].mean(）	过滤了缺失值
+print(correct_mean_age)
+
+passenger_classes = [1, 2, 3]
+fares_by_class = {}
+for this_class in passenger_classes:
+	pclass_rows = titanic_survival[titanic_survival["Pclass"] == this_class]
+	pclass_fares = pclass_rows["Fare"]
+	fare_for_class = pclass_fares.mean()
+	fares_by_class[this_class] = fare_for_class
+print(fares_by_class)
+
+{1: 84.1546, 2: 20.6621, 3: 13.6755}	求一二三等舱对应船票价格
+
+
+passenger_survival = titanic.pivot_table(index="Pclass", values="Survived", aggfunc=np.mean)
+print(passenger_survival)		各个等舱获救的几率统计
+
+Pclass
+1	0.62
+2	0.47
+3	0.24
+Name:Survived, dtype: float64
+
+
+passenger_survival = titanic.pivot_table(index="Embarked", values=["Fare","Survived"], aggfunc=np.sum)
+登船地点和登船地点价格和获救的人数的总值
+
+drop_na_columns = titanic.dropna(axis=1)	把有缺失值的列全都去掉
+new_titanic = titanic = titanic.dropna(axis=0, subset["Age", "Sex"]) 	在Age和Sex中有缺失值就去掉
+
+row_index_83_age = titanic.loc[83,"Age"]		查看第83号样本的Age为多少
+
+new_titantic = titanic.sort_values("Age", ascending=False)	按照年龄降序排列
+
+titanic_reindexed = new_titanic.reset_index(drop=True)	重新建立索引值
+
+
+函数：
+
+def not_null_count(column):		统计所有列有多少缺失值
+	column_null = pd.isnull(column)
+	null = column[column_null]
+	return len(null)
+
+column_null_count = titanic.apply(not_null_count)
+print(column_null_count)
+
+
+
+import pandas as pd
+fandango = pd.read_csv("f.csv")
+series_film = fandango['FILM']		#取出其中一列
+
+
+from pandas import Series
+
+film_names = series_film.values
+rt_scores = series_rt.values
+series_custom = Series(rt_scores, index=film_names)	
+series_custom[['Minions(2015)', 'L(2014)']] 	通过电影名找到这两个电影的评分值
+
+
+original_index = series_custom.index.tolist()
+
+sorted_index = sorted(original_index)
+sorted_by_index = series_custom.reindex(sorted_index)	对index进行排序，对电影名ABCD开始排序
+
+sc2 = series_custom.sort_index()	按索引进行排序
+sc3 = series_custom.sort_values()	按值进行排序
+
+
