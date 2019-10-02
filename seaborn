@@ -1,0 +1,173 @@
+import seaborn as sns
+import numpy as np
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+%matplotlib inline			inline写完代码直接显示图
+
+
+def sinplot(flip=1):
+    x = np.linspace(0, 14, 100)		在0，14的区间上找100个点，
+    for i in range(1, 7):		画了六条线，每天线都是sin函数
+        plt.plot(x, np.sin(x + i * .5) *( 7-i ) * flip)
+
+sinplot()
+
+sns.set()		使用seaborn默认的组合
+
+
+5种主题风格
+
+darkgrid
+whitegrid
+dark
+white
+ticks
+
+sns.set_style("whitegrid")
+data = np.random.normal(size=(20, 6))+np.arange(6) / 2
+sns.boxplot(data=data)
+
+white 和 ticks两个风格都能够移除顶部和右侧的不必要的轴脊柱。使用despine()方法来移除它们：
+sns.set_style("white")
+sinplot()
+sns.despine()
+
+
+sns.violinplot(data)		
+sns.despine(offset=10)		指定画图与轴线之间的距离
+
+sns.set_style("whitegrid")
+sns.boxplot(data=data, palette="deep")
+sns.despine(left=True)		保留left轴
+
+
+with sns.axes_style("darkgrid"):	指定一种风格
+	plt.subplot(211)
+	sinplot()
+plt.subplot(212)			另一种风格
+sinplot(-1)
+
+
+布局：线的粗细，格子的大小
+paper
+talk
+poster
+notebook
+
+sns.set_context("paper", font_scale=1.5, rc={"lines.linewidth":2.5})    	也可以指定字体、线条的大小
+plt.figure(figsize=(8, 6))
+sinplot()
+
+
+
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+#matplotlib inline
+sns.set(rc={"figure.figsize":(6, 6)})
+
+
+调色板
+color_palette()能传入任何Matplotlibs所支持的颜色
+color_palette()不写参数则默认颜色
+set_palette()设置所有图的颜色
+
+
+6个默认的颜色循环主题
+current_palette = sns.color_palette()
+sns.palplot(current_palette)
+
+
+圆形画板
+把颜色分成8类
+sns.palplot(sns.color_palette("hls", 8))
+
+把颜色传进入
+data = np.random.normal(size=(20, 8)) + np.arange(8) / 2
+sns.boxplot(data=data, palette = sns.color_palette("hls", 8))
+
+
+hls_palette()函数来控制颜色的亮度和饱和
+l-亮度 lightness
+s-饱和 saturation
+
+sns.palplot(sns.hls_palette(8, l=.7, s=.9))
+
+
+创建出4对颜色相近的
+sns.palplot(sns.color_palette("Paired", 8))
+
+
+xkcd
+包含了众包努力的针对随机RGB色的命名。
+
+plt.plot([0, 1], [0, 1], sns.xkcd_rgb["pale red"], lw=3)
+plt.plot([0, 1], [0, 2], sns.xkcd_rgb["medium green"], lw=3)
+plt.plot([0, 1], [0, 3], sns.xkcd_rgb["denim blue"], lw=3)
+
+"windows blue"
+"amber"
+"greyish"
+"faded green"
+"dusty purple"
+
+渐变型颜色，如果需要翻转渐变，在面板名称中间加一个_r后缀
+sns.palplot(sns.color_palette("Blues"))
+sns.palplot(sns.color_palette("Blues_r"))
+
+色调线性变换
+sns.palplot(sns.color_palette("cubehelix", 8))
+sns.palplot(sns.cubehelix_palette(8, start=.5, rot=-.75))
+
+
+light_palette()和dark_palette()调用定制连续调色板
+
+sns.palplot(sns.light_palette("green"))
+sns.palplot(sns.dark_palette("purple", reverse=True))	由浅到深
+
+直方图绘制
+x = np.random.normal(size=100)
+sns.distplot(x, kde=False)	kde要不要做核密度估计
+
+底部方块20等份
+sns.distplot(x, bins=20, kde=False)
+
+把数据整体轮廓表现出来
+x = np.random.gamma(6, size=200)
+sns.distplot(x, kde=False, fit=stats.gamma)
+
+
+根据均值和协方差生成数据
+mean, cov = [0, 1], [(1, .5), (.5, 1)]
+data = np.random.multivariate_normal(mean, cov, 200)
+df = pd.DataFrame(data, columns=["x", "y"])
+df
+
+
+观测两个变量之间的分布关系最好用散点图
+sns.jointplot(x="x", y="y", data=df)
+
+
+hex图，根据分布的密度有颜色的差异
+
+x, y = np.random.multivariate_normal(mean, cov, 1000).T
+with sns.axes_style("white"):
+	sns.jointplot(x=x, y=y, kind="hex", color="k")
+
+
+iris = sns.load_dataset("iris")	内置数据集
+sns.pairplot(iris)		数据特征两两画出来
+
+
+
+sns.set(color_codes=True)
+np.random.seed(sum(map(ord, "regression")))
+tips = sns.load_dataset("tips")	 内置数据集
+tips.head()		把当前数据拿出来
+
+regplot()和lmplot()都可以绘制回归关系，推荐regplot(）
+
+sns.regplot(x="total_bill", y="tip", data=tips)
+sns.lmplot(x="total_bill", y="tip", data=tips)
+
+sns.regplot(x="total_bill", y="tip", data=tips, x_jitter=.05)	增加随机浮动范围
